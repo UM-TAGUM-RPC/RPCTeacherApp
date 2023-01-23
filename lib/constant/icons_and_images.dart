@@ -16,6 +16,12 @@ class Asset {
       home = "$path/home.svg",
       profile = "$path/profile.svg",
       notif = "$path/bell.svg",
+      id = "$path/id.svg",
+      person = "$path/person.svg",
+      phone = "$path/phone.svg",
       warning = "$path/warning.png",
+      back = "$path/back.svg",
       hidePass = "$path/hidePass.svg";
 }
+// PostgrestException 
+// AuthException

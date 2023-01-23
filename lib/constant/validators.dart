@@ -7,6 +7,16 @@ class Validator {
     }
   }
 
+  static confirmPass({String? pass1, String? pass}) {
+    if (pass != pass1) {
+      return "Password Not Match";
+    } else if (pass!.isEmpty) {
+      return "Required Field";
+    } else {
+      return null;
+    }
+  }
+
   static String? validatenumber(String? input) {
     RegExp regExp = RegExp(r'^(09)[0-9]{9}$');
 

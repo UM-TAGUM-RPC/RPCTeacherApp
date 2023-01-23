@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../constant/constant.dart';
 
 class TexFormFieldBar extends StatelessWidget {
-  final double? width;
+  final double? width, widthIcon;
   final TextInputType? inputType;
   final void Function(String)? onChanged;
   final String? Function(String?)? validator;
@@ -17,6 +17,7 @@ class TexFormFieldBar extends StatelessWidget {
   const TexFormFieldBar(
       {super.key,
       this.width,
+      this.widthIcon,
       this.inputType,
       this.onChanged,
       this.validator,
@@ -66,7 +67,7 @@ class TexFormFieldBar extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: SvgPicture.asset(
               svgIcon!,
-              width: 18.w,
+              width: widthIcon ?? 18.w,
             ),
           ),
           suffixIcon: showPassIcon == true

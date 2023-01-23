@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rpcadvisorapp/src/auth/signin/signin.dart';
+import 'package:rpcadvisorapp/src/auth/signup/signup.dart';
 import 'package:rpcadvisorapp/src/home/home.dart';
 import 'package:rpcadvisorapp/src/home_bottom_nav/home_nav.dart';
 import 'package:rpcadvisorapp/src/notifcation/notification.dart';
@@ -10,6 +13,7 @@ import 'package:rpcadvisorapp/src/profile/profile.dart';
 import '../global/global.dart';
 
 const String signIn = "/",
+    signup = "signup",
     home = "home",
     notification = "notification",
     accounts = "account";
@@ -28,12 +32,18 @@ final goRouter = Provider<GoRouter>((ref) {
       final auth = ref.read(authidentifier);
       final status = auth.statusAuth == AuthStatus.authenticated;
       final signInP = state.subloc == "/";
+      final signUnP = state.subloc == "/$signIn";
       final homeP = state.subloc == "/$home";
+      final accO = state.subloc == "/$accounts";
 
-      if (!status && !signInP) {
+      if (!status && signInP && !signUnP) {
         return "/";
       }
-      if (!copy.state && status && signInP && (!homeP || homeP)) {
+      if (!copy.state &&
+          status &&
+          (!homeP || homeP || accO || !accO) &&
+          auth.statusAuth == AuthStatus.authenticated) {
+        log("Come Here");
         copy.state = true;
         return "/$home";
       }
@@ -46,6 +56,15 @@ final goRouter = Provider<GoRouter>((ref) {
         path: signIn,
         builder: (context, state) {
           return SignInScreen(
+            key: state.pageKey,
+          );
+        },
+      ),
+      GoRoute(
+        name: signup,
+        path: "/$signup",
+        builder: (context, state) {
+          return SignUpScreen(
             key: state.pageKey,
           );
         },

@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'constant/constant.dart';
 import 'routes/route_generator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+    url: SupaBaseCall.urlSupabase,
+    anonKey: SupaBaseCall.supabsePubKey,
+  );
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,
     DeviceOrientation.portraitUp,
@@ -33,6 +38,7 @@ class MyApp extends ConsumerWidget {
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
+            colorScheme: const ColorScheme.light(primary: CustomColor.kindaRed),
             primaryColor: CustomColor.kindaRed,
           ),
           routeInformationParser: goRoute.routeInformationParser,

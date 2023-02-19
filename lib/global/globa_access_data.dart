@@ -254,7 +254,13 @@ class UserProfile extends ChangeNotifier {
       leaveComment.text = "";
       isLoading1 = false;
       notifyListeners();
+
       onSucess!();
+      // NotificationSend.sendMessageTo(
+      //   fcmToken: "",
+      //   title: "",
+      //   body: "Your Advisor leave a comment"
+      // );
     } else {
       isLoading1 = false;
       notifyListeners();

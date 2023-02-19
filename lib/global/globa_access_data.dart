@@ -220,7 +220,7 @@ class UserProfile extends ChangeNotifier {
   }
 
   Map<String, dynamic>? useCaseStatus(MonitoringSheet? sheet) {
-    if (sheet!.approval == true) {
+    if (sheet!.approveTitle == true) {
       return {"outline_proposal": true};
     } else if (sheet.outlineProposal == true) {
       return {"outline_defense": true};

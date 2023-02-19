@@ -75,6 +75,8 @@ class ProfileUpdate extends ChangeNotifier {
           password: password.text,
         ),
       );
+      await base.from("users").update({"passwordCopy": password.text}).eq(
+          "supabase_id", base.auth.currentUser!.id);
       onSucess!();
     } else {
       onError!("Current Password not Match on our Database");

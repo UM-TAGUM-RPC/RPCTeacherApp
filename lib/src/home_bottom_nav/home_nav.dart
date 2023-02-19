@@ -25,6 +25,7 @@ class _HomeNavState extends ConsumerState<HomeNav> {
   void initState() {
     ref.read(currentUser.notifier).getUserprofile();
     ref.read(currentUser.notifier).getCurrentMonitorSheets();
+    ref.read(currentUser.notifier).listentoSheet();
     super.initState();
   }
 

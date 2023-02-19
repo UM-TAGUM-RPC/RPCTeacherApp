@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:rpcadvisorapp/global/global.dart';
+import 'package:rpcadvisorapp/src/monitor_detail/monitor_function/monitor_function.dart';
 
 import '../../../constant/constant.dart';
 import '../../../widget/widget.dart';
@@ -21,6 +23,7 @@ class _MonitorAdvisorCommentsState
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(currentUser);
+    final comments = ref.watch(monitorSheetDetails);
     return Scaffold(
       backgroundColor: CustomColor.white,
       body: Padding(
@@ -44,12 +47,13 @@ class _MonitorAdvisorCommentsState
                 ),
               ),
             ),
-            25.verticalSpace,
+            15.verticalSpace,
             Expanded(
               child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
-                  itemCount: 2,
+                  itemCount: comments.length,
                   itemBuilder: (context, index) {
+                    final item = comments[index];
                     return Padding(
                       padding: const EdgeInsets.only(
                         top: 15,
@@ -93,7 +97,16 @@ class _MonitorAdvisorCommentsState
                                         ),
                                       ],
                                     ),
-                                  )
+                                  ),
+                                  5.horizontalSpace,
+                                  GeneralSans(
+                                    label: DateFormat.yMMMEd()
+                                        .format(item.createdAt!),
+                                    fontColor:
+                                        CustomColor.darkColor.withOpacity(0.6),
+                                    fontSize: 8.sp,
+                                    bold: true,
+                                  ),
                                 ],
                               ),
                               5.verticalSpace,
@@ -103,7 +116,7 @@ class _MonitorAdvisorCommentsState
                               ),
                               5.verticalSpace,
                               ReadMoreText(
-                                'Choi!, imung mga widget tarunga animal ka, Balik sako sunoddapat align na cya para dili ma bungkag then diha nako mu.....',
+                                item.comment ?? "",
                                 trimLines: 2,
                                 collapsed: true,
                                 colorClickableText: Colors.pink,

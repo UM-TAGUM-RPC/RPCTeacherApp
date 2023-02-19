@@ -11,6 +11,7 @@ final currentUser = ChangeNotifierProvider<UserProfile>((ref) {
 });
 
 class UserProfile extends ChangeNotifier {
+  bool isLoading = false, isLoading1 = false;
   UsersModel? user = UsersModel();
   List<ForViewProponents> proponents = <ForViewProponents>[];
   List<MonitoringSheet> monitorSheet = <MonitoringSheet>[];
@@ -35,8 +36,28 @@ class UserProfile extends ChangeNotifier {
   listentoSheet() {
     base.from("monitoring_sheet").stream(primaryKey: ["id"]).listen((event) {
       for (var x in event) {
-        log(x.toString(), name: "LISTEN DATA");
-        notifyListeners();
+        final sheet = MonitoringSheet.fromJson(x);
+        if (monitorSheet.isNotEmpty) {
+          for (MonitoringSheet monitor in monitorSheet) {
+            if (sheet.id == monitor.id) {
+              /// update listener
+              monitor.current = sheet.current!;
+              monitor.approveTitle = sheet.approveTitle;
+              monitor.outlineDefense = sheet.outlineDefense;
+              monitor.outlineProposal = sheet.outlineProposal;
+              monitor.dataGathering = sheet.dataGathering;
+              monitor.manuscript = sheet.manuscript;
+              monitor.finalOralPrep = sheet.finalOralPrep;
+              monitor.routing = sheet.routing;
+              monitor.plagiarism = sheet.plagiarism;
+              monitor.approval = sheet.approval;
+              monitor.finalOutput = sheet.finalOutput;
+              monitor.subjectTeacher = sheet.subjectTeacher;
+              notifyListeners();
+              log(monitor.current ?? "", name: "Current Approve");
+            }
+          }
+        }
       }
     }).onError((e) {
       log(e.toString());
@@ -100,11 +121,12 @@ class UserProfile extends ChangeNotifier {
   MonitoringSheet getmonitordetail(String? id) {
     final findWhere =
         monitorSheet.where((element) => element.id == int.parse(id!));
+    //log(jsonEncode(findWhere.first).toString(), name: "DETAIL CURRENT");
     return findWhere.first;
   }
 
   String? casesStatus(MonitoringSheet? sheet) {
-    if (sheet!.approval == true) {
+    if (sheet!.approveTitle == true) {
       return "Outline Proposal";
     } else if (sheet.outlineProposal == true) {
       return "Outline Defense";
@@ -158,6 +180,85 @@ class UserProfile extends ChangeNotifier {
       } on PostgrestException catch (e) {
         log(e.message, name: "From Notif");
       }
+    }
+  }
+
+  approveCurrentStatus(
+      {String? id, Function()? onSuccess, Function()? onError}) async {
+    final getCurrentModel = getmonitordetail(id!);
+    final useCase = useCaseStatus(getCurrentModel);
+    try {
+      isLoading = true;
+      notifyListeners();
+      final getCurrentRequest = await base
+          .from("monitoring_sheet")
+          .select()
+          .eq("id", getCurrentModel.id)
+          .single()
+          .withConverter<MonitoringSheet>(
+              (data) => MonitoringSheet.fromJson(data));
+      if (getCurrentRequest.current == casesStatus(getCurrentModel)) {
+        await base
+            .from("monitoring_sheet")
+            .update(useCase!)
+            .eq("id", getCurrentModel.id);
+        await base
+            .from("monitoring_sheet")
+            .update({"current": ""}).eq("id", getCurrentModel.id);
+        getCurrentMonitorSheets();
+        isLoading = false;
+        notifyListeners();
+        onSuccess!();
+      } else {
+        isLoading = false;
+        notifyListeners();
+        onError!();
+      }
+    } on PostgrestException catch (e) {
+      log(e.message, name: "From Approve");
+    }
+  }
+
+  Map<String, dynamic>? useCaseStatus(MonitoringSheet? sheet) {
+    if (sheet!.approval == true) {
+      return {"outline_proposal": true};
+    } else if (sheet.outlineProposal == true) {
+      return {"outline_defense": true};
+    } else if (sheet.outlineDefense == true) {
+      return {"data_gathering": true};
+    } else if (sheet.dataGathering == true) {
+      return {"manuscript": true};
+    } else if (sheet.manuscript == true) {
+      return {"final_oral_prep": true};
+    } else if (sheet.finalOralPrep == true) {
+      return {"routing": true};
+    } else if (sheet.routing == true) {
+      return {"plagiarism": true};
+    } else if (sheet.plagiarism == true) {
+      return {"approval": true};
+    } else if (sheet.approval == true) {
+      return {"final_output": true};
+    } else if (sheet.finalOutput == true) {
+      return {};
+    } else {
+      return {"approve_title": true};
+    }
+  }
+
+  leaveaComment({String? id, Function()? onSucess, Function()? onError}) async {
+    isLoading1 = true;
+    notifyListeners();
+    if (leaveComment.text != "" || leaveComment.text.isNotEmpty) {
+      await base.from("advisor_comments").insert(
+          {"comments": leaveComment.text, "monitor_id": int.parse(id!)});
+      leaveComment.text = "";
+      isLoading1 = false;
+      notifyListeners();
+      onSucess!();
+    } else {
+      isLoading1 = false;
+      notifyListeners();
+      onError!();
     }
   }
 }

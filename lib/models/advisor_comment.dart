@@ -19,13 +19,13 @@ class AdvisorComment {
 
   int? id;
   String? comment;
-  String? monitorId;
+  int? monitorId;
   DateTime? createdAt;
 
   AdvisorComment copyWith({
     int? id,
     String? comment,
-    String? monitorId,
+    int? monitorId,
     DateTime? createdAt,
   }) =>
       AdvisorComment(
@@ -37,7 +37,7 @@ class AdvisorComment {
 
   factory AdvisorComment.fromJson(Map<String, dynamic> json) => AdvisorComment(
         id: json["id"],
-        comment: json["comment"],
+        comment: json["comments"],
         monitorId: json["monitor_id"],
         createdAt: json["created_at"] == null
             ? null
@@ -46,7 +46,7 @@ class AdvisorComment {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "comment": comment,
+        "comments": comment,
         "monitor_id": monitorId,
         "created_at": createdAt?.toIso8601String(),
       };

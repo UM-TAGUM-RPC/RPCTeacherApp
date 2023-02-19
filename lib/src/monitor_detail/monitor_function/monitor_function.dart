@@ -4,7 +4,8 @@ import 'package:rpcadvisorapp/models/models.dart';
 import '../../../constant/constant.dart';
 
 final monitorSheetDetails =
-    AutoDisposeStateNotifierProvider((ref) => MonitorFunction());
+    AutoDisposeStateNotifierProvider<MonitorFunction, List<AdvisorComment>>(
+        (ref) => MonitorFunction());
 
 class MonitorFunction extends StateNotifier<List<AdvisorComment>> {
   MonitorFunction() : super(<AdvisorComment>[]);
@@ -15,7 +16,7 @@ class MonitorFunction extends StateNotifier<List<AdvisorComment>> {
     final result = await base
         .from("advisor_comments")
         .select()
-        .eq("monitor_id", monitorID!);
+        .eq("monitor_id", int.parse(monitorID!));
     final List<dynamic> list1 = result;
     state = list1.map((e) => AdvisorComment.fromJson(e)).toList();
   }

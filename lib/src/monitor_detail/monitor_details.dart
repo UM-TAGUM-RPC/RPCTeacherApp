@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:rpcadvisorapp/constant/colors.dart';
 import 'package:rpcadvisorapp/routes/route_generator.dart';
 
-import '../../constant/fonts.dart';
+import '../../constant/constant.dart';
 import '../../global/global.dart';
 import '../../widget/widget.dart';
+import '../src.dart';
 
 class MonitorDetail extends ConsumerStatefulWidget {
   final String? monitorId;
@@ -23,6 +23,7 @@ class _MonitorDetailState extends ConsumerState<MonitorDetail> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(currentUser);
+    final comments = ref.watch(monitorSheetDetails);
     //// model
     final item = user.getmonitordetail(widget.monitorId);
     return Scaffold(
@@ -205,17 +206,77 @@ class _MonitorDetailState extends ConsumerState<MonitorDetail> {
                   ),
                 ],
               ),
+              item.current == "" || item.current == null
+                  ? const SizedBox.shrink()
+                  : Padding(
+                      padding: const EdgeInsets.only(
+                        top: 15,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GeneralSans(
+                            label: "Students Request to Approve for:",
+                            fontColor: CustomColor.darkColor,
+                            fontSize: 11.sp,
+                            semiBold: true,
+                          ),
+                          10.verticalSpace,
+                          GeneralSans(
+                            label: item.current ?? "",
+                            fontColor: CustomColor.kindaRed,
+                            fontSize: 14.sp,
+                            bold: true,
+                            align: TextAlign.left,
+                          ),
+                        ],
+                      ),
+                    ),
               25.verticalSpace,
-              ButtonRounded(
-                label: "Approved",
-                onPressed: () {},
-                fontColor: CustomColor.white,
-                fontSize: 12.sp,
-                backColor: CustomColor.kindaRed,
-                round: 5,
-                heigth: 36.h,
-                width: 295.w,
-              ),
+              user.isLoading == true
+                  ? Center(
+                      child: SizedBox(
+                        width: 20.w,
+                        height: 20.h,
+                        child: const CircularProgressIndicator(
+                          color: CustomColor.kindaRed,
+                        ),
+                      ),
+                    )
+                  : ButtonRounded(
+                      label: "Approved",
+                      onPressed: () {
+                        user.approveCurrentStatus(
+                          id: widget.monitorId,
+                          onSuccess: () {
+                            DialogCustom.dialogTemplateSucess(
+                              context: context,
+                              svgIcon: Asset.success,
+                              message: "Update Status Successfully",
+                              press: () {
+                                context.pop();
+                              },
+                            );
+                          },
+                          onError: () {
+                            DialogCustom.dialogTemplateSucess(
+                              context: context,
+                              svgIcon: Asset.warning,
+                              message: "No Request Yet.",
+                              press: () {
+                                context.pop();
+                              },
+                            );
+                          },
+                        );
+                      },
+                      fontColor: CustomColor.white,
+                      fontSize: 12.sp,
+                      backColor: CustomColor.kindaRed,
+                      round: 5,
+                      heigth: 36.h,
+                      width: 295.w,
+                    ),
               15.verticalSpace,
               15.verticalSpace,
               Padding(
@@ -284,21 +345,62 @@ class _MonitorDetailState extends ConsumerState<MonitorDetail> {
                 ),
               ),
               15.verticalSpace,
-              Align(
-                alignment: Alignment.centerRight,
-                child: ButtonRounded(
-                  onPressed: () {},
-                  label: "Leave Comment",
-                  width: 145.w,
-                  heigth: 36.h,
-                  fontSize: 13.sp,
-                  round: 5.0,
-                ),
-              ),
+              user.isLoading1 == true
+                  ? Center(
+                      child: SizedBox(
+                        width: 20.w,
+                        height: 20.h,
+                        child: const CircularProgressIndicator(
+                          color: CustomColor.kindaRed,
+                        ),
+                      ),
+                    )
+                  : Align(
+                      alignment: Alignment.centerRight,
+                      child: ButtonRounded(
+                        onPressed: () {
+                          user.leaveaComment(
+                            id: widget.monitorId,
+                            onSucess: () {
+                              DialogCustom.dialogTemplateSucess(
+                                context: context,
+                                svgIcon: Asset.success,
+                                message: "Send Comment",
+                                press: () {
+                                  context.pop();
+                                },
+                              );
+                            },
+                            onError: () {
+                              DialogCustom.dialogTemplateSucess(
+                                context: context,
+                                svgIcon: Asset.warning,
+                                message: "Please write a comment.",
+                                press: () {
+                                  FocusScope.of(context).unfocus();
+                                  context.pop();
+                                },
+                              );
+                            },
+                          );
+                        },
+                        label: "Leave Comment",
+                        width: 145.w,
+                        heigth: 36.h,
+                        fontSize: 13.sp,
+                        round: 5.0,
+                      ),
+                    ),
               25.verticalSpace,
               GestureDetector(
                 onTap: () {
-                  context.pushNamed(advisorComment);
+                  try {
+                    ref
+                        .read(monitorSheetDetails.notifier)
+                        .getAdvisorComments(monitorID: widget.monitorId);
+                  } finally {
+                    context.pushNamed(advisorComment);
+                  }
                 },
                 child: GeneralSans(
                   label: "Show Advisor Comments",

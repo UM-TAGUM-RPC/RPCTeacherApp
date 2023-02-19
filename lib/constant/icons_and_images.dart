@@ -17,10 +17,15 @@ class Asset {
       profile = "$path/profile.svg",
       notif = "$path/bell.svg",
       id = "$path/id.svg",
+      codez = "$path/codez.svg",
       person = "$path/person.svg",
+      add = "$path/add.svg",
+      pen = "$path/pen.svg",
       phone = "$path/phone.svg",
       warning = "$path/warning.png",
       back = "$path/back.svg",
+      success = "$path/tick.png",
+      lock = "$path/lock.svg",
       hidePass = "$path/hidePass.svg";
 }
 // PostgrestException 

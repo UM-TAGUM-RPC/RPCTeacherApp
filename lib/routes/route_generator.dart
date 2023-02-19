@@ -1,22 +1,18 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rpcadvisorapp/src/auth/signin/signin.dart';
-import 'package:rpcadvisorapp/src/auth/signup/signup.dart';
-import 'package:rpcadvisorapp/src/home/home.dart';
-import 'package:rpcadvisorapp/src/home_bottom_nav/home_nav.dart';
-import 'package:rpcadvisorapp/src/notifcation/notification.dart';
-import 'package:rpcadvisorapp/src/profile/profile.dart';
 
 import '../global/global.dart';
+import '../src/src.dart';
 
 const String signIn = "/",
     signup = "signup",
     home = "home",
     notification = "notification",
-    accounts = "account";
+    accounts = "account",
+    monitorDetail = "monitor_detail",
+    advisorComment = "advisor_comment";
 
 final parentKey = GlobalKey<NavigatorState>(debugLabel: "root");
 final shellKey = GlobalKey<NavigatorState>(debugLabel: "shell");
@@ -34,15 +30,11 @@ final goRouter = Provider<GoRouter>((ref) {
       final signInP = state.subloc == "/";
       final signUnP = state.subloc == "/$signIn";
       final homeP = state.subloc == "/$home";
-      final accO = state.subloc == "/$accounts";
 
       if (!status && signInP && !signUnP) {
         return "/";
       }
-      if (!copy.state &&
-          status &&
-          (!homeP || homeP || accO || !accO) &&
-          auth.statusAuth == AuthStatus.authenticated) {
+      if (!copy.state && status && (!homeP || homeP)) {
         log("Come Here");
         copy.state = true;
         return "/$home";
@@ -70,37 +62,57 @@ final goRouter = Provider<GoRouter>((ref) {
         },
       ),
       ShellRoute(
-          navigatorKey: shellKey,
-          builder: (context, state, child) => HomeNav(child),
-          routes: [
-            GoRoute(
-              name: home,
-              path: "/$home",
+        navigatorKey: shellKey,
+        builder: (context, state, child) => HomeNav(child),
+        routes: [
+          GoRoute(
+            name: home,
+            path: "/$home",
+            builder: (context, state) {
+              return HomeScreen(
+                key: state.pageKey,
+              );
+            },
+          ),
+          GoRoute(
+            name: accounts,
+            path: "/$accounts",
+            builder: (context, state) {
+              return ProfileScreen(
+                key: state.pageKey,
+              );
+            },
+          ),
+          GoRoute(
+            name: notification,
+            path: "/$notification",
+            builder: (context, state) {
+              return NotifcationScreen(
+                key: state.pageKey,
+              );
+            },
+          ),
+          GoRoute(
+              name: monitorDetail,
+              path: "/$monitorDetail/:monitorId",
               builder: (context, state) {
-                return HomeScreen(
+                return MonitorDetail(
                   key: state.pageKey,
+                  monitorId: state.params["monitorId"] ?? "",
                 );
               },
-            ),
-            GoRoute(
-              name: accounts,
-              path: "/$accounts",
-              builder: (context, state) {
-                return ProfileScreen(
-                  key: state.pageKey,
-                );
-              },
-            ),
-            GoRoute(
-              name: notification,
-              path: "/$notification",
-              builder: (context, state) {
-                return NotifcationScreen(
-                  key: state.pageKey,
-                );
-              },
-            ),
-          ]),
+              routes: const []),
+          GoRoute(
+            name: advisorComment,
+            path: "/$advisorComment",
+            builder: (context, state) {
+              return MonitorAdvisorComments(
+                key: state.pageKey,
+              );
+            },
+          ),
+        ],
+      ),
     ],
   );
 });

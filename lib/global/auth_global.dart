@@ -1,12 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:rpcadvisorapp/constant/constant.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../widget/widget.dart';
 
 enum AuthStatus { blank, authenticated, unauthenticated }
 
@@ -33,30 +31,29 @@ class AuthGlobal extends ChangeNotifier {
     });
   }
 
-  void signIn({String? email, String? password, BuildContext? context}) async {
+  void signIn(
+      {String? email,
+      String? password,
+      required Function(String) onError}) async {
     isLoading = true;
+    notifyListeners();
     final result = await base.auth
         .signInWithPassword(email: email, password: password!)
         .onError<AuthException>((e, s) {
-      return DialogCustom.dialogTemplateSucess(
-        context: context!,
-        message: e.message,
-        press: () {
-          context.pop();
-        },
-      );
+      isLoading = false;
+      notifyListeners();
+
+      return onError(e.message);
     });
 
     Future.delayed(const Duration(seconds: 2), () {
       if (result.session != null) {
         isLoading = false;
-        state = AuthStatus.authenticated;
-
         notifyListeners();
+        state = AuthStatus.authenticated;
+        //context!.goNamed(home);
       }
     });
-
-    notifyListeners();
   }
 
   void signOut() async {

@@ -124,7 +124,15 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                             onPressed: () {
                               if (keysignIn.currentState!.validate()) {
                                 ref.read(authidentifier.notifier).signIn(
-                                      context: context,
+                                      onError: (p0) {
+                                        DialogCustom.dialogTemplateSucess(
+                                          context: context,
+                                          message: p0,
+                                          press: () {
+                                            context.pop();
+                                          },
+                                        );
+                                      },
                                       email: email.text,
                                       password: password.text,
                                     );

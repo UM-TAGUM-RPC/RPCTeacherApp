@@ -1,6 +1,12 @@
 export 'auth/signin/signin.dart';
+export 'auth/signup/function/function_signup.dart';
 export 'auth/signup/signup.dart';
+export 'home/dialog_code/add_code.dart';
 export 'home/home.dart';
 export 'home_bottom_nav/home_nav.dart';
+export 'monitor_detail/advisor_comments.dart/monitor_comments.dart';
+export 'monitor_detail/monitor_details.dart';
+export 'monitor_detail/monitor_function/monitor_function.dart';
 export 'notifcation/notification.dart';
 export 'profile/profile.dart';
+export 'profile/profile_function/function_profile.dart';

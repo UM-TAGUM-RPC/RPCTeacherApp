@@ -1,11 +1,36 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rpcadvisorapp/global/global.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'constant/constant.dart';
 import 'routes/route_generator.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  "hig_importance_channel",
+  "High Importance Notification",
+  description: "This channel is used for important notifications",
+  importance: Importance.high,
+  playSound: true,
+  enableVibration: true,
+);
+Future<void> messagehandling(RemoteMessage? message) async {
+  await Firebase.initializeApp();
+  RemoteNotification? notification = message!.notification;
+  AndroidNotification? android = message.notification?.android;
+  if (notification != null && android != null) {
+    ///
+  } else {
+    ///
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +38,10 @@ void main() async {
     url: SupaBaseCall.urlSupabase,
     anonKey: SupaBaseCall.supabsePubKey,
   );
+  await Firebase.initializeApp();
+  await SharedPrefs.init();
+  FirebaseMessaging.onBackgroundMessage(messagehandling);
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,
     DeviceOrientation.portraitUp,
@@ -24,12 +53,24 @@ void main() async {
   );
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  @override
+  void initState() {
+    ref.read(firebaseMessagingProvider).onInit();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final goRoute = ref.watch(goRouter);
+
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,

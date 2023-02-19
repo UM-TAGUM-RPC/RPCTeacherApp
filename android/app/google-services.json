@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "656027163077",
+    "project_id": "rpc2023-5ad2e",
+    "storage_bucket": "rpc2023-5ad2e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:656027163077:android:9fd08c23896cfc796d93ac",
+        "android_client_info": {
+          "package_name": "app.rpcUMTeachers.rpcadvisorapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "656027163077-0mtnr02qcrcbud8f0qpje584ng2keouh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD07fiwpykb19vPU-PCpcuo_XlP0eXtw7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "656027163077-0mtnr02qcrcbud8f0qpje584ng2keouh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

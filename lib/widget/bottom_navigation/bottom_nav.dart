@@ -1,12 +1,10 @@
-import 'package:badges/badges.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui' show lerpDouble;
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rpcadvisorapp/widget/text/normal_text.dart';
-
+import 'package:badges/badges.dart' as badges;
 import '../../constant/constant.dart';
 
 // ignore: must_be_immutable
@@ -142,11 +140,18 @@ class _BottomIndicatorBarState extends State<BottomIndicatorBar> {
   }
 
   Widget _setIcon(BottomIndicatorNavigationBarItem item) {
-    return Badge(
+    return badges.Badge(
       showBadge: item.showBadge!,
-      animationType: BadgeAnimationType.slide,
-      animationDuration: const Duration(milliseconds: 600),
-      badgeColor: CustomColor.darkColor,
+      // animationType: BadgeAnimationType.slide,
+      // animationDuration: const Duration(milliseconds: 600),
+      // badgeColor: CustomColor.darkColor,
+      badgeAnimation: const badges.BadgeAnimation.slide(),
+      badgeStyle: badges.BadgeStyle(
+        shape: badges.BadgeShape.circle,
+        badgeColor: CustomColor.darkColor,
+        padding: const EdgeInsets.all(5),
+        borderRadius: BorderRadius.circular(4),
+      ),
       badgeContent: GeneralSans(
         label: "${item.count}",
         fontSize: 11.sp,
@@ -154,7 +159,9 @@ class _BottomIndicatorBarState extends State<BottomIndicatorBar> {
       ),
       child: SvgPicture.asset(
         item.icon!,
-        color: iconData == item.icon ? activeColor : null,
+        color: iconData == item.icon
+            ? activeColor
+            : CustomColor.darkColor.withOpacity(0.7),
         height: 25.5.h,
         width: 25.5.w,
       ),

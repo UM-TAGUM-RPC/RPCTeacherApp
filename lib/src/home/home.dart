@@ -20,6 +20,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final profile = ref.watch(currentUser);
+
     return Scaffold(
       backgroundColor: CustomColor.white,
       body: SafeArea(

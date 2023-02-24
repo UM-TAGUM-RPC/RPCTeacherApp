@@ -23,7 +23,7 @@ class _MonitorDetailState extends ConsumerState<MonitorDetail> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(currentUser);
-    final comments = ref.watch(monitorSheetDetails);
+    // final comments = ref.watch(monitorSheetDetails);
     //// model
     final item = user.getmonitordetail(widget.monitorId);
     return Scaffold(

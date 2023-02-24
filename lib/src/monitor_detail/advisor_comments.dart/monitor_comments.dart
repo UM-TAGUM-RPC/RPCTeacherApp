@@ -50,6 +50,7 @@ class _MonitorAdvisorCommentsState
             15.verticalSpace,
             Expanded(
               child: ListView.builder(
+                  reverse: true,
                   physics: const BouncingScrollPhysics(),
                   itemCount: comments.length,
                   itemBuilder: (context, index) {
@@ -101,7 +102,8 @@ class _MonitorAdvisorCommentsState
                                   5.horizontalSpace,
                                   GeneralSans(
                                     label: DateFormat.yMMMEd()
-                                        .format(item.createdAt!),
+                                        .add_jms()
+                                        .format(item.createdAt!.toLocal()),
                                     fontColor:
                                         CustomColor.darkColor.withOpacity(0.6),
                                     fontSize: 8.sp,

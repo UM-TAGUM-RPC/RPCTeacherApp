@@ -4,7 +4,7 @@ import 'package:rpcadvisorapp/models/models.dart';
 import '../../../constant/constant.dart';
 
 final monitorSheetDetails =
-    AutoDisposeStateNotifierProvider<MonitorFunction, List<AdvisorComment>>(
+    StateNotifierProvider<MonitorFunction, List<AdvisorComment>>(
         (ref) => MonitorFunction());
 
 class MonitorFunction extends StateNotifier<List<AdvisorComment>> {

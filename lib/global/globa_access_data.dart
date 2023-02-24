@@ -126,26 +126,70 @@ class UserProfile extends ChangeNotifier {
   }
 
   String? casesStatus(MonitoringSheet? sheet) {
-    if (sheet!.approveTitle == true) {
-      return "Outline Proposal";
-    } else if (sheet.outlineProposal == true) {
-      return "Outline Defense";
-    } else if (sheet.outlineDefense == true) {
-      return "Data Gathering";
-    } else if (sheet.dataGathering == true) {
-      return "Manuscript for Oral Presentation";
-    } else if (sheet.manuscript == true) {
-      return "Final Oral Presentation";
-    } else if (sheet.finalOralPrep == true) {
-      return "Routing";
-    } else if (sheet.routing == true) {
-      return "Plagiarism Check";
-    } else if (sheet.plagiarism == true) {
-      return "Approval";
-    } else if (sheet.approval == true) {
-      return "Submission of Approved Final Output(Book Form)";
-    } else if (sheet.finalOutput == true) {
+    if (sheet!.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true &&
+        sheet.dataGathering == true &&
+        sheet.manuscript == true &&
+        sheet.finalOralPrep == true &&
+        sheet.routing == true &&
+        sheet.plagiarism == true &&
+        sheet.approval == true &&
+        sheet.finalOutput == true) {
       return "COMPLETE";
+    } else if (sheet.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true &&
+        sheet.dataGathering == true &&
+        sheet.manuscript == true &&
+        sheet.finalOralPrep == true &&
+        sheet.routing == true &&
+        sheet.plagiarism == true &&
+        sheet.approval == true) {
+      return "Submission of Approved Final Output(Book Form)";
+    } else if (sheet.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true &&
+        sheet.dataGathering == true &&
+        sheet.manuscript == true &&
+        sheet.finalOralPrep == true &&
+        sheet.routing == true &&
+        sheet.plagiarism == true) {
+      return "Approval";
+    } else if (sheet.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true &&
+        sheet.dataGathering == true &&
+        sheet.manuscript == true &&
+        sheet.finalOralPrep == true &&
+        sheet.routing == true) {
+      return "Plagiarism Check";
+    } else if (sheet.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true &&
+        sheet.dataGathering == true &&
+        sheet.manuscript == true &&
+        sheet.finalOralPrep == true) {
+      return "Routing";
+    } else if (sheet.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true &&
+        sheet.dataGathering == true &&
+        sheet.manuscript == true) {
+      return "Final Oral Presentation";
+    } else if (sheet.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true &&
+        sheet.dataGathering == true) {
+      return "Manuscript for Oral Presentation";
+    } else if (sheet.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true) {
+      return "Data Gathering";
+    } else if (sheet.approveTitle == true && sheet.outlineProposal == true) {
+      return "Outline Defense";
+    } else if (sheet.approveTitle == true) {
+      return "Outline Proposal";
     } else {
       return "Approval of Title";
     }
@@ -198,14 +242,23 @@ class UserProfile extends ChangeNotifier {
           .withConverter<MonitoringSheet>(
               (data) => MonitoringSheet.fromJson(data));
       if (getCurrentRequest.current == casesStatus(getCurrentModel)) {
-        await base
-            .from("monitoring_sheet")
-            .update(useCase!)
-            .eq("id", getCurrentModel.id);
+        if (useCase != null) {
+          await base
+              .from("monitoring_sheet")
+              .update(useCase)
+              .eq("id", getCurrentModel.id);
+        }
+
         await base
             .from("monitoring_sheet")
             .update({"current": ""}).eq("id", getCurrentModel.id);
         getCurrentMonitorSheets();
+        sendNotificationonStudents(
+          monitorId: "${getCurrentModel.id}",
+          title: "Approved ${casesStatus(getCurrentModel)}",
+          message:
+              "Approved ${casesStatus(getCurrentModel)} for title ${getCurrentModel.thesisTitle}, Congratulations....",
+        );
         isLoading = false;
         notifyListeners();
         onSuccess!();
@@ -220,28 +273,102 @@ class UserProfile extends ChangeNotifier {
   }
 
   Map<String, dynamic>? useCaseStatus(MonitoringSheet? sheet) {
-    if (sheet!.approveTitle == true) {
-      return {"outline_proposal": true};
-    } else if (sheet.outlineProposal == true) {
-      return {"outline_defense": true};
-    } else if (sheet.outlineDefense == true) {
-      return {"data_gathering": true};
-    } else if (sheet.dataGathering == true) {
-      return {"manuscript": true};
-    } else if (sheet.manuscript == true) {
-      return {"final_oral_prep": true};
-    } else if (sheet.finalOralPrep == true) {
-      return {"routing": true};
-    } else if (sheet.routing == true) {
-      return {"plagiarism": true};
-    } else if (sheet.plagiarism == true) {
-      return {"approval": true};
-    } else if (sheet.approval == true) {
-      return {"final_output": true};
-    } else if (sheet.finalOutput == true) {
-      return {};
+    if (sheet!.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true &&
+        sheet.dataGathering == true &&
+        sheet.manuscript == true &&
+        sheet.finalOralPrep == true &&
+        sheet.routing == true &&
+        sheet.plagiarism == true &&
+        sheet.approval == true &&
+        sheet.finalOutput == true) {
+      return null;
+    } else if (sheet.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true &&
+        sheet.dataGathering == true &&
+        sheet.manuscript == true &&
+        sheet.finalOralPrep == true &&
+        sheet.routing == true &&
+        sheet.plagiarism == true &&
+        sheet.approval == true) {
+      return {
+        "final_output": true,
+        "final_output_date": DateTime.now().toIso8601String(),
+      };
+    } else if (sheet.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true &&
+        sheet.dataGathering == true &&
+        sheet.manuscript == true &&
+        sheet.finalOralPrep == true &&
+        sheet.routing == true &&
+        sheet.plagiarism == true) {
+      return {
+        "approval": true,
+        "approval_date": DateTime.now().toIso8601String(),
+      };
+    } else if (sheet.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true &&
+        sheet.dataGathering == true &&
+        sheet.manuscript == true &&
+        sheet.finalOralPrep == true &&
+        sheet.routing == true) {
+      return {
+        "plagiarism": true,
+        "plagiarism_date": DateTime.now().toIso8601String(),
+      };
+    } else if (sheet.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true &&
+        sheet.dataGathering == true &&
+        sheet.manuscript == true &&
+        sheet.finalOralPrep == true) {
+      return {
+        "routing": true,
+        "routing_date": DateTime.now().toIso8601String(),
+      };
+    } else if (sheet.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true &&
+        sheet.dataGathering == true &&
+        sheet.manuscript == true) {
+      return {
+        "final_oral_prep": true,
+        "final_oral_prep_date": DateTime.now().toIso8601String(),
+      };
+    } else if (sheet.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true &&
+        sheet.dataGathering == true) {
+      return {
+        "manuscript": true,
+        "manuscript_date": DateTime.now().toIso8601String(),
+      };
+    } else if (sheet.approveTitle == true &&
+        sheet.outlineProposal == true &&
+        sheet.outlineDefense == true) {
+      return {
+        "data_gathering": true,
+        "data_gathering_date": DateTime.now().toIso8601String(),
+      };
+    } else if (sheet.approveTitle == true && sheet.outlineProposal == true) {
+      return {
+        "outline_defense": true,
+        "outline_defense_date": DateTime.now().toIso8601String(),
+      };
+    } else if (sheet.approveTitle == true) {
+      return {
+        "outline_proposal": true,
+        "outline_proposal_date": DateTime.now().toIso8601String(),
+      };
     } else {
-      return {"approve_title": true};
+      return {
+        "approve_title": true,
+        "approve_title_date": DateTime.now().toIso8601String(),
+      };
     }
   }
 
@@ -251,20 +378,68 @@ class UserProfile extends ChangeNotifier {
     if (leaveComment.text != "" || leaveComment.text.isNotEmpty) {
       await base.from("advisor_comments").insert(
           {"comments": leaveComment.text, "monitor_id": int.parse(id!)});
-      leaveComment.text = "";
       isLoading1 = false;
       notifyListeners();
-
+      sendNotificationonStudents(
+        monitorId: id,
+        title: "Advisor Comment",
+        message: "Advisor : ${leaveComment.text}",
+      );
+      leaveComment.text = "";
       onSucess!();
-      // NotificationSend.sendMessageTo(
-      //   fcmToken: "",
-      //   title: "",
-      //   body: "Your Advisor leave a comment"
-      // );
     } else {
       isLoading1 = false;
       notifyListeners();
       onError!();
     }
+  }
+
+  sendNotificationonStudents(
+      {String? monitorId, String? message, String? title}) async {
+    final model = getmonitordetail(monitorId!);
+    for (var sheetModel in model.idStudent!.studentsId!) {
+      final id = sheetModel.idStudent;
+      // find token in table
+      try {
+        final studentToken = await base
+            .from("notification_token_device")
+            .select()
+            .eq("supabase_id", id)
+            .single();
+
+        if (studentToken != null) {
+          // Send Notif
+          NotificationSend.sendMessageTo(
+            fcmToken: studentToken["token_device"] ?? "",
+            title: title ?? "",
+            body: message ?? "",
+          );
+
+          createNotificationtabledata(
+            message: message,
+            studentId: "${studentToken["user_id"]}",
+            advisorId: "${user!.id}",
+            monitorId: model.id!.toString(),
+          );
+        }
+      } on PostgrestException catch (e) {
+        log(e.message.toLowerCase().toString());
+      }
+    }
+  }
+
+  createNotificationtabledata(
+      {String? message,
+      String? studentId,
+      String? advisorId,
+      String? monitorId}) async {
+    await base.from("notifications").insert(
+      {
+        "from_id": int.parse(advisorId!),
+        "to_id": int.parse(studentId!),
+        "monitor_id": int.parse(monitorId!),
+        "message": message,
+      },
+    );
   }
 }

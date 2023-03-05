@@ -71,9 +71,15 @@ class _HomeNavState extends ConsumerState<HomeNav> {
                           ],
                         ),
                       ),
-                      SvgPicture.asset(
-                        Asset.pen,
-                        width: 25.w,
+                      GestureDetector(
+                        onTap: () {
+                          context.pushNamed(signaturePage);
+                        },
+                        behavior: HitTestBehavior.translucent,
+                        child: SvgPicture.asset(
+                          Asset.pen,
+                          width: 25.w,
+                        ),
                       ),
                       25.horizontalSpace,
                       GestureDetector(
@@ -135,20 +141,17 @@ class _HomeNavState extends ConsumerState<HomeNav> {
     ref.read(navSelection.notifier).state = count!;
     switch (count) {
       case 0:
-
-         context.goNamed(home);
+        context.goNamed(home);
         break;
       case 1:
-        
         context.goNamed(accounts);
         break;
       case 2:
-
         context.goNamed(notification);
         break;
       case 3:
         //context.goNamed(notification);
-  
+
         DialogCustom.dialogoption(
           context: context,
           yes: () {

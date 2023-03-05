@@ -113,6 +113,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  cr_file_saver:
+    dependency: "direct main"
+    description:
+      name: cr_file_saver
+      sha256: eaa02c244881234854e13b1316eec3789f2a8a0b2737ca1cad8e03b89be85ce2
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2+1"
   crypto:
     dependency: transitive
     description:
@@ -481,13 +489,13 @@ packages:
     source: hosted
     version: "1.0.1"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
-      sha256: dcea5feb97d8abf90cab9e9030b497fb7c3cbf26b7a1fe9e3ef7dcb0a1ddec95
+      sha256: "04890b994ee89bfa80bf3080bfec40d5a92c5c7a785ebb02c13084a099d2b6f9"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.12"
+    version: "2.0.13"
   path_provider_android:
     dependency: transitive
     description:
@@ -729,10 +737,26 @@ packages:
     dependency: "direct main"
     description:
       name: supabase_flutter
-      sha256: "29249c8a2c358de4c04bc455afc88cd063ef04520e466a991091059666b53b88"
+      sha256: "1a9c1e9a3a3988e7e988d7a14d7f8dbc663ac7bc0f5aea5cafc98a3660dd0931"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "1.4.1"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      sha256: "4319454a92fe5aea1e90ff68c17703a39517ab05dd3074c34c9553e5f7cbf414"
+      url: "https://pub.dev"
+    source: hosted
+    version: "20.4.52"
+  syncfusion_flutter_signaturepad:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_signaturepad
+      sha256: "66377ade68fbcc0dfd44a19a575ba13650c1b28634095418408f9358ac14073b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "20.4.52"
   term_glyph:
     dependency: transitive
     description:

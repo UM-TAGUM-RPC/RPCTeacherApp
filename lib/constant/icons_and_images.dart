@@ -26,7 +26,9 @@ class Asset {
       back = "$path/back.svg",
       success = "$path/tick.png",
       lock = "$path/lock.svg",
-      hidePass = "$path/hidePass.svg";
+      hidePass = "$path/hidePass.svg",
+      check = "$path/check.svg",
+      clear = "$path/clear.svg";
 }
 // PostgrestException 
 // AuthException

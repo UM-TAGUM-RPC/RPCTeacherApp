@@ -12,7 +12,8 @@ const String signIn = "/",
     notification = "notification",
     accounts = "account",
     monitorDetail = "monitor_detail",
-    advisorComment = "advisor_comment";
+    advisorComment = "advisor_comment",
+    signaturePage = "signature";
 
 final parentKey = GlobalKey<NavigatorState>(debugLabel: "root");
 final shellKey = GlobalKey<NavigatorState>(debugLabel: "shell");
@@ -107,6 +108,15 @@ final goRouter = Provider<GoRouter>((ref) {
             path: "/$advisorComment",
             builder: (context, state) {
               return MonitorAdvisorComments(
+                key: state.pageKey,
+              );
+            },
+          ),
+          GoRoute(
+            name: signaturePage,
+            path: "/$signaturePage",
+            builder: (context, state) {
+              return HandSignatureupload(
                 key: state.pageKey,
               );
             },

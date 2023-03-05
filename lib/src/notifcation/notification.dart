@@ -15,7 +15,7 @@ class _NotifcationScreenState extends ConsumerState<NotifcationScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: CustomColor.whiteF7,
+      backgroundColor: CustomColor.white,
     );
   }
 }

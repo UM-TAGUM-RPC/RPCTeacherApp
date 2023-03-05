@@ -1,6 +1,7 @@
 export 'auth/signin/signin.dart';
 export 'auth/signup/function/function_signup.dart';
 export 'auth/signup/signup.dart';
+export 'hand_signature/hand_signature.dart';
 export 'home/dialog_code/add_code.dart';
 export 'home/home.dart';
 export 'home_bottom_nav/home_nav.dart';

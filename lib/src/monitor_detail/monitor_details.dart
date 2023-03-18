@@ -39,6 +39,23 @@ class _MonitorDetailState extends ConsumerState<MonitorDetail> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              GestureDetector(
+                onTap: () => context.pop(),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GeneralSans(
+                        align: TextAlign.left,
+                        fontSize: 15.sp,
+                        fontColor: CustomColor.darkColor,
+                        label: "Back",
+                        bold: true,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              15.verticalSpace,
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -149,60 +166,62 @@ class _MonitorDetailState extends ConsumerState<MonitorDetail> {
                     ),
                   ),
                   15.horizontalSpace,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              GeneralSans(
-                                label: "Status:",
-                                fontColor: CustomColor.darkColor,
-                                fontSize: 11.sp,
-                                semiBold: true,
-                              ),
-                              10.horizontalSpace,
-                              GeneralSans(
-                                label: item.status,
-                                fontColor: CustomColor.kindaRed,
-                                fontSize: 11.sp,
-                                bold: true,
-                              ),
-                            ],
-                          ),
-                          5.verticalSpace,
-                        ],
-                      ),
-                      5.verticalSpace,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              GeneralSans(
-                                label: "Current to approve:",
-                                fontColor: CustomColor.darkColor,
-                                fontSize: 11.sp,
-                                semiBold: true,
-                              ),
-                              10.horizontalSpace,
-                            ],
-                          ),
-                          8.verticalSpace,
-                          GeneralSans(
-                            label: user.casesStatus(item),
-                            fontColor: CustomColor.kindaRed,
-                            fontSize: 18.sp,
-                            bold: true,
-                          ),
-                        ],
-                      ),
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                GeneralSans(
+                                  label: "Status:",
+                                  fontColor: CustomColor.darkColor,
+                                  fontSize: 11.sp,
+                                  semiBold: true,
+                                ),
+                                10.horizontalSpace,
+                                GeneralSans(
+                                  label: item.status,
+                                  fontColor: CustomColor.kindaRed,
+                                  fontSize: 11.sp,
+                                  bold: true,
+                                ),
+                              ],
+                            ),
+                            5.verticalSpace,
+                          ],
+                        ),
+                        5.verticalSpace,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                GeneralSans(
+                                  label: "Current to approve:",
+                                  fontColor: CustomColor.darkColor,
+                                  fontSize: 11.sp,
+                                  semiBold: true,
+                                ),
+                                10.horizontalSpace,
+                              ],
+                            ),
+                            8.verticalSpace,
+                            GeneralSans(
+                              label: user.casesStatus(item),
+                              fontColor: CustomColor.kindaRed,
+                              fontSize: 18.sp,
+                              bold: true,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

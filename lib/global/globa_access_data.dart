@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rpcadvisorapp/constant/constant.dart';
 import 'package:rpcadvisorapp/models/models.dart';
+import 'package:rpcadvisorapp/models/notifications.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final currentUser = ChangeNotifierProvider<UserProfile>((ref) {
@@ -12,12 +13,18 @@ final currentUser = ChangeNotifierProvider<UserProfile>((ref) {
 
 class UserProfile extends ChangeNotifier {
   bool isLoading = false, isLoading1 = false;
-  UsersModel? user = UsersModel();
+  UsersModel user = UsersModel();
   List<ForViewProponents> proponents = <ForViewProponents>[];
   List<MonitoringSheet> monitorSheet = <MonitoringSheet>[];
   final base = SupaBaseCall.supabaseService;
   final TextEditingController enterCode = TextEditingController(),
       leaveComment = TextEditingController();
+
+  List<MonitoringSheet> get listFiltered => monitorSheet
+      .where((element) =>
+          element.status == "PENDING" ||
+          element.status == "LACK OF REQUIREMENTS")
+      .toList();
 
   Future<void> getUserprofile() async {
     final userProfile = await base
@@ -57,6 +64,10 @@ class UserProfile extends ChangeNotifier {
               log(monitor.current ?? "", name: "Current Approve");
             }
           }
+        } else {
+          // monitorSheet.add(sheet);
+          listFiltered.add(sheet);
+          notifyListeners();
         }
       }
     }).onError((e) {
@@ -69,7 +80,7 @@ class UserProfile extends ChangeNotifier {
         .from("monitoring_sheet")
         .update(
           {
-            "id_adivsor": {"advisor_id": user!.id}
+            "id_adivsor": {"advisor_id": user.id}
           },
         )
         .eq("z_code", enterCode.text)
@@ -218,7 +229,7 @@ class UserProfile extends ChangeNotifier {
       try {
         await base.from("notification_token_device").insert({
           "supabase_id": base.auth.currentUser!.id,
-          "user_id": user!.id,
+          "user_id": user.id,
           "token_device": SharedPrefs.read(tokenDevice),
         });
       } on PostgrestException catch (e) {
@@ -247,6 +258,17 @@ class UserProfile extends ChangeNotifier {
               .from("monitoring_sheet")
               .update(useCase)
               .eq("id", getCurrentModel.id);
+
+          if (getCurrentRequest.current ==
+              "Submission of Approved Final Output(Book Form)") {
+            createNotificationtabledata(
+              message:
+                  "Please Confirm the thesis titled ${getCurrentModel.thesisTitle} if it's already covered all missing requirements",
+              studentId: "3",
+              advisorId: "${user.id}",
+              monitorId: "${getCurrentModel.id}",
+            );
+          }
         }
 
         await base
@@ -418,7 +440,7 @@ class UserProfile extends ChangeNotifier {
           createNotificationtabledata(
             message: message,
             studentId: "${studentToken["user_id"]}",
-            advisorId: "${user!.id}",
+            advisorId: "${user.id}",
             monitorId: model.id!.toString(),
           );
         }
@@ -441,5 +463,47 @@ class UserProfile extends ChangeNotifier {
         "message": message,
       },
     );
+  }
+
+  List<Notifications> notifications = <Notifications>[];
+
+  getNotificationAndShow() async {
+    base.from("notifications").stream(
+      primaryKey: ['id'],
+    ).listen((event) async {
+      for (var x in event) {
+        final mapdata = Notifications.fromJson(x);
+
+        if (mapdata.toId == user.id) {
+          final findLis =
+              notifications.where((element) => element.id == mapdata.id);
+          if (!findLis.isNotEmpty) {
+            notifications.add(mapdata);
+            notifyListeners();
+          }
+        }
+      }
+    });
+  }
+
+  markAsRead({bool? all, String? id}) async {
+    if (all == true) {
+      await base
+          .from('notifications')
+          .update({"status": "read"}).eq("to_id", int.parse(id!));
+      final updateModel = notifications.where((e) => e.toId == int.parse(id));
+      for (var x in updateModel) {
+        x.status = "read";
+        notifyListeners();
+      }
+    } else {
+      await base
+          .from('notifications')
+          .update({"status": "read"}).eq("id", int.parse(id!));
+      final updateModel =
+          notifications.firstWhere((e) => e.id == int.parse(id));
+      updateModel.status = "read";
+      notifyListeners();
+    }
   }
 }

@@ -23,7 +23,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   void initState() {
     ref
         .read(profileUpdate.notifier)
-        .onFirstOpen(ref.read(currentUser.notifier).user!);
+        .onFirstOpen(ref.read(currentUser.notifier).user);
     super.initState();
   }
 

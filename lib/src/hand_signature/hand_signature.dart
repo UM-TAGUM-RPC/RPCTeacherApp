@@ -58,8 +58,8 @@ class _HandSignatureuploadState extends ConsumerState<HandSignatureupload> {
                       onTap: () {
                         sfisignature.handleSaveButtonPressed(
                             name:
-                                "${controller.user!.firstName!}-${controller.user!.lastName!}",
-                            advisorSupaId: controller.user!.supabaseId,
+                                "${controller.user.firstName!}-${controller.user.lastName!}",
+                            advisorSupaId: controller.user.supabaseId,
                             onSucess: () {
                               DialogCustom.dialogTemplateSucess(
                                 context: context,

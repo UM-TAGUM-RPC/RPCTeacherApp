@@ -35,9 +35,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Expanded(
                 child: ListView.builder(
                     physics: const BouncingScrollPhysics(),
-                    itemCount: profile.monitorSheet.length,
+                    itemCount: profile.listFiltered.length,
                     itemBuilder: (context, index) {
-                      final item = profile.monitorSheet[index];
+                      final item = profile.listFiltered[index];
                       return GestureDetector(
                         onTap: () {
                           //////////////////////////
@@ -192,77 +192,80 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                         ),
                                       ),
                                       15.horizontalSpace,
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  GeneralSans(
-                                                    label: "Status:",
-                                                    fontColor:
-                                                        CustomColor.darkColor,
-                                                    fontSize: 11.sp,
-                                                    semiBold: true,
-                                                  ),
-                                                  10.horizontalSpace,
-                                                  GeneralSans(
-                                                    label: item.status,
-                                                    fontColor:
-                                                        CustomColor.kindaRed,
-                                                    fontSize: 11.sp,
-                                                    bold: true,
-                                                  ),
-                                                ],
-                                              ),
-                                              5.verticalSpace,
-                                            ],
-                                          ),
-                                          5.verticalSpace,
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  GeneralSans(
-                                                    label: "Next to do:",
-                                                    fontColor:
-                                                        CustomColor.darkColor,
-                                                    fontSize: 11.sp,
-                                                    semiBold: true,
-                                                  ),
-                                                  10.horizontalSpace,
-                                                  // GeneralSans(
-                                                  //   label: "PENDING",
-                                                  //   fontColor:
-                                                  //       CustomColor.kindaRed,
-                                                  //   fontSize: 11.sp,
-                                                  //   bold: true,
-                                                  // ),
-                                                ],
-                                              ),
-                                              8.verticalSpace,
-                                              GeneralSans(
-                                                label:
-                                                    profile.casesStatus(item),
-                                                fontColor: CustomColor.kindaRed,
-                                                fontSize: 18.sp,
-                                                bold: true,
-                                              ),
-                                            ],
-                                          )
-                                        ],
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    GeneralSans(
+                                                      label: "Status:",
+                                                      fontColor:
+                                                          CustomColor.darkColor,
+                                                      fontSize: 11.sp,
+                                                      semiBold: true,
+                                                    ),
+                                                    10.horizontalSpace,
+                                                    GeneralSans(
+                                                      label: item.status,
+                                                      fontColor:
+                                                          CustomColor.kindaRed,
+                                                      fontSize: 11.sp,
+                                                      bold: true,
+                                                    ),
+                                                  ],
+                                                ),
+                                                5.verticalSpace,
+                                              ],
+                                            ),
+                                            5.verticalSpace,
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    GeneralSans(
+                                                      label: "Next to do:",
+                                                      fontColor:
+                                                          CustomColor.darkColor,
+                                                      fontSize: 11.sp,
+                                                      semiBold: true,
+                                                    ),
+                                                    10.horizontalSpace,
+                                                    // GeneralSans(
+                                                    //   label: "PENDING",
+                                                    //   fontColor:
+                                                    //       CustomColor.kindaRed,
+                                                    //   fontSize: 11.sp,
+                                                    //   bold: true,
+                                                    // ),
+                                                  ],
+                                                ),
+                                                8.verticalSpace,
+                                                GeneralSans(
+                                                  label:
+                                                      profile.casesStatus(item),
+                                                  fontColor:
+                                                      CustomColor.kindaRed,
+                                                  fontSize: 18.sp,
+                                                  bold: true,
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   )

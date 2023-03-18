@@ -86,7 +86,7 @@ class _MonitorAdvisorCommentsState
                                       children: [
                                         GeneralSans(
                                           label:
-                                              "${user.user!.firstName} ${user.user!.lastName}",
+                                              "${user.user.firstName} ${user.user.lastName}",
                                           fontColor: CustomColor.kindaRed,
                                           fontSize: 12.sp,
                                           bold: true,

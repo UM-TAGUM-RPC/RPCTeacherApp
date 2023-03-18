@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rpcadvisorapp/global/global.dart';
 import 'package:rpcadvisorapp/routes/route_generator.dart';
@@ -26,6 +25,7 @@ class _HomeNavState extends ConsumerState<HomeNav> {
     ref.read(currentUser.notifier).getUserprofile();
     ref.read(currentUser.notifier).getCurrentMonitorSheets();
     ref.read(currentUser.notifier).listentoSheet();
+    ref.read(currentUser.notifier).getNotificationAndShow();
     super.initState();
   }
 
@@ -62,8 +62,8 @@ class _HomeNavState extends ConsumerState<HomeNav> {
                               bold: true,
                             ),
                             GeneralSans(
-                              label: profile.user!.firstName != null
-                                  ? "${profile.user!.firstName} ${profile.user!.lastName}"
+                              label: profile.user.firstName != null
+                                  ? "${profile.user.firstName} ${profile.user.lastName}"
                                   : "",
                               fontSize: 15.sp,
                               align: TextAlign.left,
@@ -71,26 +71,26 @@ class _HomeNavState extends ConsumerState<HomeNav> {
                           ],
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          context.pushNamed(signaturePage);
-                        },
-                        behavior: HitTestBehavior.translucent,
-                        child: SvgPicture.asset(
-                          Asset.pen,
-                          width: 25.w,
-                        ),
-                      ),
-                      25.horizontalSpace,
-                      GestureDetector(
-                        onTap: () {
-                          DialogCustom.diualogEnterCode(context);
-                        },
-                        child: SvgPicture.asset(
-                          Asset.add,
-                          width: 25.w,
-                        ),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     context.pushNamed(signaturePage);
+                      //   },
+                      //   behavior: HitTestBehavior.translucent,
+                      //   child: SvgPicture.asset(
+                      //     Asset.pen,
+                      //     width: 25.w,
+                      //   ),
+                      // ),
+                      // 25.horizontalSpace,
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     DialogCustom.diualogEnterCode(context);
+                      //   },
+                      //   child: SvgPicture.asset(
+                      //     Asset.add,
+                      //     width: 25.w,
+                      //   ),
+                      // ),
                     ],
                   ),
                   10.verticalSpace,

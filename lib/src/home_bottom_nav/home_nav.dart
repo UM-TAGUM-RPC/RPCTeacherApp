@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rpcadvisorapp/global/global.dart';
 import 'package:rpcadvisorapp/routes/route_generator.dart';
+import 'package:rpcadvisorapp/src/home/home.dart';
+import 'package:rpcadvisorapp/src/notifcation/notification.dart';
+import 'package:rpcadvisorapp/src/profile/profile.dart';
 import 'package:rpcadvisorapp/widget/widget.dart';
 
 import '../../constant/constant.dart';
@@ -28,6 +31,12 @@ class _HomeNavState extends ConsumerState<HomeNav> {
     ref.read(currentUser.notifier).getNotificationAndShow();
     super.initState();
   }
+
+  List<Widget> pages = <Widget>[
+    const HomeScreen(),
+    const ProfileScreen(),
+    const NotifcationScreen()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +113,7 @@ class _HomeNavState extends ConsumerState<HomeNav> {
             ),
           ),
         ),
-        body: widget.child,
+        body: IndexedStack(index: index, children: pages),
         bottomNavigationBar: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -141,13 +150,13 @@ class _HomeNavState extends ConsumerState<HomeNav> {
     ref.read(navSelection.notifier).state = count!;
     switch (count) {
       case 0:
-        context.goNamed(home);
+        // context.goNamed(home);
         break;
       case 1:
-        context.goNamed(accounts);
+        // context.goNamed(accounts);
         break;
       case 2:
-        context.goNamed(notification);
+        // context.goNamed(notification);
         break;
       case 3:
         //context.goNamed(notification);

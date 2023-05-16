@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rpcadvisorapp/global/auth_global.dart';
 import 'package:rpcadvisorapp/routes/route_generator.dart';
 
@@ -24,8 +25,17 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
   @override
   void initState() {
+    allowStorage();
     ref.read(authidentifier.notifier).statusUserAunthenticated();
     super.initState();
+  }
+
+  allowStorage() async {
+    await [
+      Permission.storage,
+      Permission.manageExternalStorage,
+      Permission.photos
+    ].request();
   }
 
   @override

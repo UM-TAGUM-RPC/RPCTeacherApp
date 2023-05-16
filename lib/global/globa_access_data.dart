@@ -47,27 +47,37 @@ class UserProfile extends ChangeNotifier {
         if (monitorSheet.isNotEmpty) {
           for (MonitoringSheet monitor in monitorSheet) {
             if (sheet.id == monitor.id) {
-              /// update listener
-              monitor.current = sheet.current!;
-              monitor.approveTitle = sheet.approveTitle;
-              monitor.outlineDefense = sheet.outlineDefense;
-              monitor.outlineProposal = sheet.outlineProposal;
-              monitor.dataGathering = sheet.dataGathering;
-              monitor.manuscript = sheet.manuscript;
-              monitor.finalOralPrep = sheet.finalOralPrep;
-              monitor.routing = sheet.routing;
-              monitor.plagiarism = sheet.plagiarism;
-              monitor.approval = sheet.approval;
-              monitor.finalOutput = sheet.finalOutput;
-              monitor.subjectTeacher = sheet.subjectTeacher;
+              listFiltered[0] = sheet;
               notifyListeners();
-              log(monitor.current ?? "", name: "Current Approve");
+              //   // update listener
+              //   monitor.current = sheet.current!;
+              //   monitor.approveTitle = sheet.approveTitle;
+              //   monitor.outlineDefense = sheet.outlineDefense;
+              //   monitor.outlineProposal = sheet.outlineProposal;
+              //   monitor.dataGathering = sheet.dataGathering;
+              //   monitor.manuscript = sheet.manuscript;
+              //   monitor.finalOralPrep = sheet.finalOralPrep;
+              //   monitor.routing = sheet.routing;
+              //   monitor.plagiarism = sheet.plagiarism;
+              //   monitor.approval = sheet.approval;
+              //   monitor.finalOutput = sheet.finalOutput;
+              //   monitor.subjectTeacher = sheet.subjectTeacher;
+              //   notifyListeners();
+              //   log(monitor.current ?? "", name: "Current Approve");
+            } else {
+              listFiltered.add(sheet);
+              notifyListeners();
             }
           }
         } else {
           // monitorSheet.add(sheet);
-          listFiltered.add(sheet);
-          notifyListeners();
+
+          // for (MonitoringSheet monitor in monitorSheet) {
+          //   if (sheet.id == monitor.id) {
+          //     listFiltered.add(sheet);
+          //     notifyListeners();
+          //   }
+          // }
         }
       }
     }).onError((e) {
@@ -97,8 +107,7 @@ class UserProfile extends ChangeNotifier {
           .select()
           .eq("id_adivsor->>advisor_id", base.auth.currentUser!.id);
       final List<dynamic> list = result;
-      monitorSheet
-          .addAll(list.map((e) => MonitoringSheet.fromJson(e)).toList());
+      monitorSheet = list.map((e) => MonitoringSheet.fromJson(e)).toList();
       notifyListeners();
     } finally {
       for (MonitoringSheet monitor in monitorSheet) {

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rpcadvisorapp/src/monitor_detail/pdf/pdf_view.dart';
 
 import '../global/global.dart';
 import '../src/src.dart';
@@ -13,7 +14,8 @@ const String signIn = "/",
     accounts = "account",
     monitorDetail = "monitor_detail",
     advisorComment = "advisor_comment",
-    signaturePage = "signature";
+    signaturePage = "signature",
+    viewPdf = "viewF";
 
 final parentKey = GlobalKey<NavigatorState>(debugLabel: "root");
 final shellKey = GlobalKey<NavigatorState>(debugLabel: "shell");
@@ -62,66 +64,99 @@ final goRouter = Provider<GoRouter>((ref) {
           );
         },
       ),
-      ShellRoute(
-        navigatorKey: shellKey,
-        builder: (context, state, child) => HomeNav(child),
-        routes: [
-          GoRoute(
-            name: home,
-            path: "/$home",
-            builder: (context, state) {
-              return HomeScreen(
+      GoRoute(
+        name: viewPdf,
+        path: "/$viewPdf",
+        builder: (context, state) {
+          return PdfView(
+            key: state.pageKey,
+          );
+        },
+      ),
+      // ShellRoute(
+      //   navigatorKey: shellKey,
+      //   builder: (context, state, child) => HomeNav(child),
+      //   routes: [
+
+      //   ],
+      // ),
+
+      GoRoute(
+        name: home,
+        path: "/$home",
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+            child: HomeNav(
+              Container(),
+            ),
+          );
+        },
+      ),
+      // GoRoute(
+      //       name: home,
+      //       path: "/$home",
+      //       pageBuilder: (context, state) {
+      //         return NoTransitionPage(
+      //           child: HomeScreen(
+      //             key: state.pageKey,
+      //           ),
+      //         );
+      //       },
+      //     ),
+      GoRoute(
+        name: accounts,
+        path: "/$accounts",
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+            child: ProfileScreen(
+              key: state.pageKey,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        name: notification,
+        path: "/$notification",
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+            child: NotifcationScreen(
+              key: state.pageKey,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+          name: monitorDetail,
+          path: "/$monitorDetail/:monitorId",
+          pageBuilder: (context, state) {
+            return NoTransitionPage(
+              child: MonitorDetail(
                 key: state.pageKey,
-              );
-            },
-          ),
-          GoRoute(
-            name: accounts,
-            path: "/$accounts",
-            builder: (context, state) {
-              return ProfileScreen(
-                key: state.pageKey,
-              );
-            },
-          ),
-          GoRoute(
-            name: notification,
-            path: "/$notification",
-            builder: (context, state) {
-              return NotifcationScreen(
-                key: state.pageKey,
-              );
-            },
-          ),
-          GoRoute(
-              name: monitorDetail,
-              path: "/$monitorDetail/:monitorId",
-              builder: (context, state) {
-                return MonitorDetail(
-                  key: state.pageKey,
-                  monitorId: state.params["monitorId"] ?? "",
-                );
-              },
-              routes: const []),
-          GoRoute(
-            name: advisorComment,
-            path: "/$advisorComment",
-            builder: (context, state) {
-              return MonitorAdvisorComments(
-                key: state.pageKey,
-              );
-            },
-          ),
-          GoRoute(
-            name: signaturePage,
-            path: "/$signaturePage",
-            builder: (context, state) {
-              return HandSignatureupload(
-                key: state.pageKey,
-              );
-            },
-          ),
-        ],
+                monitorId: state.params["monitorId"] ?? "",
+              ),
+            );
+          },
+          routes: const []),
+      GoRoute(
+        name: advisorComment,
+        path: "/$advisorComment",
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+              child: MonitorAdvisorComments(
+            key: state.pageKey,
+          ));
+        },
+      ),
+      GoRoute(
+        name: signaturePage,
+        path: "/$signaturePage",
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+            child: HandSignatureupload(
+              key: state.pageKey,
+            ),
+          );
+        },
       ),
     ],
   );

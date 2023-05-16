@@ -23,6 +23,11 @@ class HomeNav extends ConsumerStatefulWidget {
 }
 
 class _HomeNavState extends ConsumerState<HomeNav> {
+  List<Widget> pages = <Widget>[
+    const HomeScreen(),
+    const ProfileScreen(),
+    const NotifcationScreen()
+  ];
   @override
   void initState() {
     ref.read(currentUser.notifier).getUserprofile();
@@ -32,11 +37,7 @@ class _HomeNavState extends ConsumerState<HomeNav> {
     super.initState();
   }
 
-  List<Widget> pages = <Widget>[
-    const HomeScreen(),
-    const ProfileScreen(),
-    const NotifcationScreen()
-  ];
+  
 
   @override
   Widget build(BuildContext context) {

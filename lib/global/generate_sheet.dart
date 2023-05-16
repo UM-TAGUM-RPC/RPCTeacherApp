@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cr_file_saver/file_saver.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -16,9 +17,13 @@ class GenerateSheet {
   }) async {
     final bytes = await document!.save();
     final dir = await getTemporaryDirectory();
-    // final dir = await getApplicationDocumentsDirectory();
     final file = File("${dir.path}/$name");
     await file.writeAsBytes(bytes);
+    // final rag = await file.open(mode: FileMode.writeOnlyAppend);
+    // rag.writeStringSync("string\n");
+    // await rag.close();
+    // await CRFileSaver.saveFile(file.toString(), destinationFileName: name);
+
     return file;
   }
 
@@ -52,8 +57,16 @@ class GenerateSheet {
       ),
     );
 
-    return saveDocumentPdf(name: name, document: pdf);
+    final file = await saveDocumentPdf(name: name, document: pdf);
+    final files = File(file.path);
+    final wai = await pdf.document.save();
+    final s = await files.writeAsBytes(wai);
+    await CRFileSaver.saveFile(s.path, destinationFileName: name);
+
+    return file;
   }
+
+ 
 
   /*
    * 

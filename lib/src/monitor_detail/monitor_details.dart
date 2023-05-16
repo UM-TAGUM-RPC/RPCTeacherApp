@@ -121,7 +121,7 @@ class _MonitorDetailState extends ConsumerState<MonitorDetail> {
                                     .toList(),
                                 nameteach:
                                     "${user.user.firstName} ${user.user.lastName}",
-                                onSuccess: () {
+                                onSuccess: () async {
                                   // Navigator.push(
                                   //   context,
                                   //   MaterialPageRoute(

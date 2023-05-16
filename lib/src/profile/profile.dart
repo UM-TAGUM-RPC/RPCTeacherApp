@@ -21,10 +21,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   void initState() {
-    ref
+    if( ref.read(currentUser.notifier).user.id != null){
+      ref
         .read(profileUpdate.notifier)
         .onFirstOpen(ref.read(currentUser.notifier).user);
+    }
     super.initState();
+    
   }
 
   @override

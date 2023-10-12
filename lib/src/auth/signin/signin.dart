@@ -145,6 +145,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                       },
                                       email: email.text,
                                       password: password.text,
+                                      success: () {
+                                         context.goNamed(home);
+                                      },
                                     );
                               }
                             },

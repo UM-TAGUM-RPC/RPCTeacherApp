@@ -19,7 +19,7 @@ dependencies:
   intl: ^0.18.0
   badges: ^3.0.2
   supabase_flutter: ^1.4.1
-  flutter_screenutil: ^5.6.0
+  flutter_screenutil: ^5.7.0
   flutter_svg: ^1.1.6
   dropdown_search: ^5.0.5
   enhanced_read_more: ^0.0.2
@@ -31,7 +31,7 @@ dependencies:
   syncfusion_flutter_signaturepad: ^20.4.52
   path_provider: ^2.0.13
   cr_file_saver: ^0.0.2+1
-  printing: ^5.10.4
+  printing: ^5.11.0
   syncfusion_flutter_pdfviewer: ^20.4.53
   permission_handler: ^10.2.0
 

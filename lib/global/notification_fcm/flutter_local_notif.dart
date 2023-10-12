@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rpcadvisorapp/constant/constant.dart';
 
 final firebaseMessagingProvider =
@@ -39,7 +40,8 @@ class FirebasePushNotif {
   }
 
   firebaseMessageListen() async {
-    NotificationSettings perm =
+   if(!(await Permission.notification.isGranted)){
+     NotificationSettings perm =
         await FirebaseMessaging.instance.requestPermission(
       alert: true,
       announcement: false,
@@ -52,6 +54,7 @@ class FirebasePushNotif {
     if (perm.authorizationStatus == AuthorizationStatus.authorized) {
     } else if (perm.authorizationStatus == AuthorizationStatus.provisional) {
     } else {}
+   }
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()

@@ -34,13 +34,13 @@ final goRouter = Provider<GoRouter>((ref) {
       final signUnP = state.subloc == "/$signIn";
       final homeP = state.subloc == "/$home";
 
-      if (!status && signInP && !signUnP) {
+      if (!status && signInP && !signUnP && homeP) {
         return "/";
       }
       if (!copy.state && status && (!homeP || homeP)) {
         log("Come Here");
         copy.state = true;
-        return "/$home";
+        return home;
       }
 
       return null;

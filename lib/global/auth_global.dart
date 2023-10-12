@@ -3,7 +3,9 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rpcadvisorapp/constant/constant.dart';
+import 'package:rpcadvisorapp/routes/route_generator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 enum AuthStatus { blank, authenticated, unauthenticated }
@@ -22,7 +24,7 @@ class AuthGlobal extends ChangeNotifier {
       if (data.session != null) {
         log(data.session!.user.email!, name: "EMAIL");
         state = AuthStatus.authenticated;
-        // GoRouter.of(context!).goNamed(home);
+       GoRouter.of(parentKey.currentContext!).goNamed(home);
         notifyListeners();
       } else {
         state = AuthStatus.unauthenticated;
@@ -34,7 +36,7 @@ class AuthGlobal extends ChangeNotifier {
   void signIn(
       {String? email,
       String? password,
-      required Function(String) onError}) async {
+      required Function(String) onError,Function()? success}) async {
     isLoading = true;
     notifyListeners();
     final result = await base.auth
@@ -51,7 +53,7 @@ class AuthGlobal extends ChangeNotifier {
         isLoading = false;
         notifyListeners();
         state = AuthStatus.authenticated;
-        //context!.goNamed(home);
+        success!();
       }
     });
   }

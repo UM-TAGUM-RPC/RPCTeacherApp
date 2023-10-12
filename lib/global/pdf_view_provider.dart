@@ -1,44 +1,115 @@
 import 'dart:io';
 
+import 'package:cr_file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rpcadvisorapp/global/generate_sheet.dart';
 
-import '../models/monitoring_sheet.dart';
+import '../models/models.dart';
 
 final pdfProvider = ChangeNotifierProvider((ref) => PDfProvider());
 
 class PDfProvider extends ChangeNotifier {
   File file = File("");
-
+  List<DateTime> modelList = <DateTime>[];
+  
   generate(
       {MonitoringSheet? sheet,
-      //List<ModelSignature>? model,
       List<String>? names,
       String? nameteach,
-      Function()? onSuccess}) async {
-    //final List<String> names = <String>[];
-    // try {
-
-    //   // for (var x in sheet!.idStudent!.studentsId!) {
-    //   //   final namesAdded = returnStudentName(id: x.idStudent);
-    //   //   names.add(namesAdded);
-    //   //   notifyListeners();
-    //   // }
-    // } finally {
-    // if (names.isNotEmpty) {
-    final pdfFile = await GenerateSheet.generateSheettoPdf(
+      Function()? onSuccess}) async { 
+        try{
+          if(modelList.isNotEmpty){
+            modelList.clear();
+            notifyListeners();
+          }
+          identify(sheet);
+        }finally{
+            final pdfFile = await GenerateSheet.generateSheettoPdf(
       name: "${sheet!.thesisTitle}.pdf",
       names: names,
-      // model: model,
       advisorname: nameteach,
+      model: modelList,
     );
     if (pdfFile.path != "") {
       file = pdfFile;
+      
       notifyListeners();
       onSuccess!();
+      final folder = await getTemporaryDirectory();
+      final path = "${folder.path}/${sheet!.thesisTitle}.pdf";
+      final files =  File(file.path);
+      final rag = await file.open(mode: FileMode.writeOnlyAppend);
+      rag.writeStringSync("string\n");
+      await rag.close();
+      await CRFileSaver.saveFile(path,destinationFileName: "${sheet!.thesisTitle}.pdf");
     }
-    // }
-    //}
+        }
+  
+  
+  }
+
+   identify(MonitoringSheet? sheet) async {
+    if (sheet!.approveTitle == true) {
+      modelList.add(
+       sheet.approveTitleDate!
+      );
+      notifyListeners();
+    }
+    if (sheet.outlineProposal == true) {
+       modelList.add(
+       sheet.outlineProposalDate!
+      );
+      notifyListeners();
+    }
+    if (sheet.outlineDefense == true) {
+       modelList.add(
+       sheet.outlineProposalDate!
+      );
+      notifyListeners();
+    }
+    if (sheet.dataGathering == true) {
+     modelList.add(
+       sheet.dataGatheringDate!
+      );
+      notifyListeners();
+    }
+    if (sheet.manuscript == true) {
+       modelList.add(
+       sheet.manuscriptDate!
+      );
+      notifyListeners();
+    }
+    if (sheet.finalOralPrep == true) {
+      modelList.add(
+       sheet.finalOralPrepDate!
+      );
+      notifyListeners();
+    }
+    if (sheet.routing == true) {
+     modelList.add(
+       sheet.routingDate!
+      );
+      notifyListeners();
+    }
+    if (sheet.plagiarism == true) {
+      modelList.add(
+       sheet.plagiarismDate!
+      );
+      notifyListeners();
+    }
+    if (sheet.approval == true) {
+     modelList.add(
+       sheet.approvalDate!
+      );
+      notifyListeners();
+    }
+    if (sheet.finalOutput == true) {
+       modelList.add(
+       sheet.finalOutputDate!
+      );
+      notifyListeners();
+    }
   }
 }

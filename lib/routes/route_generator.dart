@@ -30,9 +30,9 @@ final goRouter = Provider<GoRouter>((ref) {
       final copy = ref.read(isDuplicate.notifier);
       final auth = ref.read(authidentifier);
       final status = auth.statusAuth == AuthStatus.authenticated;
-      final signInP = state.subloc == "/";
-      final signUnP = state.subloc == "/$signIn";
-      final homeP = state.subloc == "/$home";
+      final signInP = state.matchedLocation == "/";
+      final signUnP = state.matchedLocation == "/$signIn";
+      final homeP = state.matchedLocation == "/$home";
 
       if (!status && signInP && !signUnP && homeP) {
         return "/";
@@ -132,7 +132,7 @@ final goRouter = Provider<GoRouter>((ref) {
             return NoTransitionPage(
               child: MonitorDetail(
                 key: state.pageKey,
-                monitorId: state.params["monitorId"] ?? "",
+                monitorId: state.pathParameters["monitorId"] ?? "",
               ),
             );
           },

@@ -33,6 +33,43 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:656027163077:android:8c1a63e2ee1a6a4c6d93ac",
+        "android_client_info": {
+          "package_name": "app.rpcUMstudent.rpcstudentapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "656027163077-m74ktags542n8ohite62bauombiq6e7n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.rpcUMstudent.rpcstudentapp",
+            "certificate_hash": "3833c8f74c58074080e30317d6c86f15b3ee7c52"
+          }
+        },
+        {
+          "client_id": "656027163077-0mtnr02qcrcbud8f0qpje584ng2keouh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD07fiwpykb19vPU-PCpcuo_XlP0eXtw7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "656027163077-0mtnr02qcrcbud8f0qpje584ng2keouh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

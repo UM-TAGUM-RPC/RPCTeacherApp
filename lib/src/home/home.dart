@@ -41,8 +41,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       return GestureDetector(
                         onTap: () {
                           //////////////////////////
-                          context.pushNamed(monitorDetail,
-                              params: {"monitorId": item.id.toString()});
+                          context.pushNamed(monitorDetail, pathParameters: {
+                            "monitorId": item.id.toString()
+                          });
                           //////////////////////////
                         },
                         behavior: HitTestBehavior.translucent,

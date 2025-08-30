@@ -140,7 +140,7 @@ class _MonitorDetailState extends ConsumerState<MonitorDetail> {
                             backColor: CustomColor.kindaRed,
                             round: 5,
                             heigth: 36.sp,
-                            width: 80.sp,
+                            width: 100.sp,
                           ),
                           12.sp.verticalSpace,
                         ],
@@ -444,7 +444,7 @@ class _MonitorDetailState extends ConsumerState<MonitorDetail> {
                             );
                           },
                           label: "Leave Comment",
-                          width: 145.w,
+                          width: 155.sp,
                           heigth: 36.h,
                           fontSize: 13.sp,
                           round: 5.0,

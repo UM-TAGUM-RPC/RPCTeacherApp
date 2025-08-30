@@ -33,11 +33,9 @@ class UserProfile extends ChangeNotifier {
         .eq("supabase_id", base.auth.currentUser!.id)
         .single();
 
-    if (userProfile != null) {
-      user = UsersModel.fromJson(userProfile);
-      notifyListeners();
-      updateNotifdata();
-    }
+    user = UsersModel.fromJson(userProfile);
+    notifyListeners();
+    updateNotifdata();
   }
 
   listentoSheet() {
@@ -118,7 +116,7 @@ class UserProfile extends ChangeNotifier {
             final userProfile = await base
                 .from("users")
                 .select()
-                .eq("supabase_id", ids.idStudent)
+                .eq("supabase_id", ids.idStudent ?? "")
                 .single();
             final user1 = UsersModel.fromJson(userProfile);
             list1.add(user1);
@@ -257,7 +255,7 @@ class UserProfile extends ChangeNotifier {
       final getCurrentRequest = await base
           .from("monitoring_sheet")
           .select()
-          .eq("id", getCurrentModel.id)
+          .eq("id", getCurrentModel.id ?? "")
           .single()
           .withConverter<MonitoringSheet>(
               (data) => MonitoringSheet.fromJson(data));
@@ -266,7 +264,7 @@ class UserProfile extends ChangeNotifier {
           await base
               .from("monitoring_sheet")
               .update(useCase)
-              .eq("id", getCurrentModel.id);
+              .eq("id", getCurrentModel.id ?? "");
 
           if (getCurrentRequest.current ==
               "Submission of Approved Final Output(Book Form)") {
@@ -282,7 +280,7 @@ class UserProfile extends ChangeNotifier {
 
         await base
             .from("monitoring_sheet")
-            .update({"current": ""}).eq("id", getCurrentModel.id);
+            .update({"current": ""}).eq("id", getCurrentModel.id ?? "");
         getCurrentMonitorSheets();
         sendNotificationonStudents(
           monitorId: "${getCurrentModel.id}",
@@ -435,24 +433,22 @@ class UserProfile extends ChangeNotifier {
         final studentToken = await base
             .from("notification_token_device")
             .select()
-            .eq("supabase_id", id)
+            .eq("supabase_id", id ?? "")
             .single();
 
-        if (studentToken != null) {
-          // Send Notif
-          NotificationSend.sendMessageTo(
-            fcmToken: studentToken["token_device"] ?? "",
-            title: title ?? "",
-            body: message ?? "",
-          );
+        // Send Notif
+        NotificationSend.sendMessageTo(
+          fcmToken: studentToken["token_device"] ?? "",
+          title: title ?? "",
+          body: message ?? "",
+        );
 
-          createNotificationtabledata(
-            message: message,
-            studentId: "${studentToken["user_id"]}",
-            advisorId: "${user.id}",
-            monitorId: model.id!.toString(),
-          );
-        }
+        createNotificationtabledata(
+          message: message,
+          studentId: "${studentToken["user_id"]}",
+          advisorId: "${user.id}",
+          monitorId: model.id!.toString(),
+        );
       } on PostgrestException catch (e) {
         log(e.message.toLowerCase().toString());
       }

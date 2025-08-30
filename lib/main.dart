@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rpcadvisorapp/firebase_options.dart';
 import 'package:rpcadvisorapp/global/global.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -38,7 +39,9 @@ void main() async {
     url: SupaBaseCall.urlSupabase,
     anonKey: SupaBaseCall.supabsePubKey,
   );
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await SharedPrefs.init();
   FirebaseMessaging.onBackgroundMessage(messagehandling);
 

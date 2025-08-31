@@ -11,14 +11,15 @@ class SharedPrefs {
   }
   SharedPrefs.ctor();
 
-  static init() async {
+  static Future<SharedPreferences> init() async {
     return preferences = await SharedPreferences.getInstance();
   }
 
-  static write(String? key, dynamic value) async =>
+  static Future<Future<bool>> write(String? key, dynamic value) async =>
       preferences!.setString(key!, "$value");
 
-  static read(String? key) => preferences!.getString(key ?? "") ?? "";
+  static String read(String? key) => preferences!.getString(key ?? "") ?? "";
 
-  static remove(String? key) async => await preferences!.remove(key!);
+  static Future<bool> remove(String? key) async =>
+      await preferences!.remove(key!);
 }

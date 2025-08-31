@@ -33,8 +33,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   Widget build(BuildContext context) {
     final showobs = ref.watch(showPass);
     final controller = ref.watch(signUpController);
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      onPopInvokedWithResult: (c, b) async => false,
       child: Scaffold(
         backgroundColor: CustomColor.white,
         body: SafeArea(
@@ -169,8 +169,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           align: TextAlign.left,
                         );
                       },
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
+                      decoratorProps: DropDownDecoratorProps(
+                        decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(
                             vertical: 12,
                             horizontal: 14,
@@ -212,7 +212,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         ),
                       ),
                       selectedItem: controller.currentSelected,
-                      items: controller.state,
+                      items: (value, props) => controller.state,
                       itemAsString: (item) => item.courseDepartment!,
                       popupProps: PopupProps.dialog(
                         showSearchBox: true,
@@ -264,7 +264,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                             ),
                           ),
                         ),
-                        itemBuilder: (context, item, isSelected) => Padding(
+                        itemBuilder: (context, item, isMe, isSelected) =>
+                            Padding(
                           padding: const EdgeInsets.all(15.0),
                           child: GeneralSans(
                             label: item.courseDepartment,

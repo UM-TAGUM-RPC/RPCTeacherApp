@@ -41,7 +41,7 @@ void main() async {
   );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );
+  ).then((x) async => await FirebasePushNotif().onInit());
   await SharedPrefs.init();
   FirebaseMessaging.onBackgroundMessage(messagehandling);
 
@@ -66,7 +66,7 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
-    ref.read(firebaseMessagingProvider).onInit();
+    // ref.read(firebaseMessagingProvider).onInit();
     super.initState();
   }
 

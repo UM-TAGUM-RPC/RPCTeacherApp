@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
-import 'package:cr_file_saver/file_saver.dart';
+// import 'package:cr_file_saver/file_saver.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rpcadvisorapp/constant/constant.dart';
@@ -51,10 +51,10 @@ class SignatureFunction extends ChangeNotifier {
         }
         await pathSignature.writeAsBytes(bytes!.buffer.asUint8List());
         final filePath = "${down.path}/$name.png";
-        final file =
-            await CRFileSaver.saveFile(filePath, destinationFileName: "$name");
+        // final file =
+        //     await CRFileSaver.saveFile(filePath, destinationFileName: "$name");
         uploadImage(file: File(filePath), advisorSupaID: advisorSupaId);
-        log(file.toString(), name: "PATH DONWLOAD");
+        // log(file.toString(), name: "PATH DONWLOAD");
         isLoading = false;
         notifyListeners();
         onSucess!();
@@ -63,7 +63,7 @@ class SignatureFunction extends ChangeNotifier {
     //uploadImage(file: File(""), advisorSupaID: advisorSupaId);
   }
 
-  uploadImage({File? file, String? advisorSupaID}) async {
+  Future<void> uploadImage({File? file, String? advisorSupaID}) async {
     /*
      *
      *  In supabse storage no documentation for existing same file 

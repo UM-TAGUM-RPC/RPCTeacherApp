@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:rpcadvisorapp/routes/route_generator.dart';
+import 'package:rpcadvisorapp/src/monitor_detail/remove_students/delete_students.dart';
 
 import '../../constant/constant.dart';
 import '../../global/global.dart';
@@ -51,6 +53,36 @@ class _MonitorDetailState extends ConsumerState<MonitorDetail> {
                           label: "Back",
                           bold: true,
                         ),
+                      ),
+                      ButtonRounded(
+                        label: "Delete",
+                        onPressed: () {
+                          DialogCustom.dialogoption(
+                              context: context,
+                              yes: () {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+
+                                user.deleteSheet(
+                                  id: "${item.id}",
+                                  onSuccess: () {
+                                    context.pop();
+                                  },
+                                );
+                              },
+                              no: () {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+                              },
+                              message:
+                                  "Are you sure want to delete ${item.thesisTitle!}");
+                        },
+                        fontColor: CustomColor.white,
+                        fontSize: 12.sp,
+                        backColor: CustomColor.kindaRed,
+                        round: 5,
+                        heigth: 36.sp,
+                        width: 100.sp,
                       ),
                     ],
                   ),
@@ -155,7 +187,6 @@ class _MonitorDetailState extends ConsumerState<MonitorDetail> {
                     ),
                   ],
                 ),
-                15.verticalSpace,
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
@@ -165,103 +196,58 @@ class _MonitorDetailState extends ConsumerState<MonitorDetail> {
                   ),
                 ),
                 15.verticalSpace,
-                Row(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          GeneralSans(
-                            label: "Proponents:",
-                            fontColor: CustomColor.darkColor,
-                            fontSize: 11.sp,
-                          ),
-                          19.horizontalSpace,
-                          ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: user.returnModel(item.zCode).length,
-                              itemBuilder: (context, index) {
-                                final itemP =
-                                    user.returnModel(item.zCode)[index];
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 5,
-                                    horizontal: 0,
-                                  ),
-                                  child: GeneralSans(
-                                    label:
-                                        "${itemP.firstName} ${itemP.lastName}",
-                                    fontColor: CustomColor.darkColor,
-                                    fontSize: 11.sp,
-                                    bold: true,
-                                    align: TextAlign.left,
-                                  ),
-                                );
-                              }),
-                        ],
-                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            GeneralSans(
+                              label: "Status:",
+                              fontColor: CustomColor.darkColor,
+                              fontSize: 11.sp,
+                              semiBold: true,
+                            ),
+                            10.horizontalSpace,
+                            GeneralSans(
+                              label: item.status,
+                              fontColor: CustomColor.kindaRed,
+                              fontSize: 11.sp,
+                              bold: true,
+                            ),
+                          ],
+                        ),
+                        5.verticalSpace,
+                      ],
                     ),
-                    15.horizontalSpace,
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  GeneralSans(
-                                    label: "Status:",
-                                    fontColor: CustomColor.darkColor,
-                                    fontSize: 11.sp,
-                                    semiBold: true,
-                                  ),
-                                  10.horizontalSpace,
-                                  GeneralSans(
-                                    label: item.status,
-                                    fontColor: CustomColor.kindaRed,
-                                    fontSize: 11.sp,
-                                    bold: true,
-                                  ),
-                                ],
-                              ),
-                              5.verticalSpace,
-                            ],
-                          ),
-                          5.verticalSpace,
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  GeneralSans(
-                                    label: "Current to approve:",
-                                    fontColor: CustomColor.darkColor,
-                                    fontSize: 11.sp,
-                                    semiBold: true,
-                                  ),
-                                  10.horizontalSpace,
-                                ],
-                              ),
-                              8.verticalSpace,
-                              GeneralSans(
-                                label: user.casesStatus(item),
-                                fontColor: CustomColor.kindaRed,
-                                fontSize: 18.sp,
-                                bold: true,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                    5.verticalSpace,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            GeneralSans(
+                              label: "Current to approve:",
+                              fontColor: CustomColor.darkColor,
+                              fontSize: 11.sp,
+                              semiBold: true,
+                            ),
+                            10.horizontalSpace,
+                          ],
+                        ),
+                        8.verticalSpace,
+                        GeneralSans(
+                          label: user.casesStatus(item),
+                          fontColor: CustomColor.kindaRed,
+                          fontSize: 18.sp,
+                          bold: true,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -336,7 +322,63 @@ class _MonitorDetailState extends ConsumerState<MonitorDetail> {
                         heigth: 36.h,
                         width: 295.w,
                       ),
-                15.verticalSpace,
+                25.verticalSpace,
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    showModalBottomSheet(
+                      isDismissible: true,
+                      isScrollControlled: true,
+                      barrierLabel: "",
+                      context: context,
+                      builder: (builder) => RemoveStudentFromSheet(
+                        monitorId: widget.monitorId,
+                      ),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      GeneralSans(
+                        label: "Proponents:",
+                        fontColor: CustomColor.darkColor,
+                        fontSize: 11.sp,
+                      ),
+                      Spacer(),
+                      SvgPicture.asset(
+                        Asset.pen,
+                        height: 25.spMin,
+                      ),
+                    ],
+                  ),
+                ),
+                19.horizontalSpace,
+                user.returnModel(item.zCode).isEmpty
+                    ? GeneralSans(
+                        label: "No one joined yet.",
+                        fontColor: CustomColor.darkColor,
+                        fontSize: 14.sp,
+                        medium: true,
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: user.returnModel(item.zCode).length,
+                        itemBuilder: (context, index) {
+                          final itemP = user.returnModel(item.zCode)[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 5,
+                              horizontal: 0,
+                            ),
+                            child: GeneralSans(
+                              label: "${itemP.firstName} ${itemP.lastName}",
+                              fontColor: CustomColor.darkColor,
+                              fontSize: 11.sp,
+                              bold: true,
+                              align: TextAlign.left,
+                            ),
+                          );
+                        }),
                 15.verticalSpace,
                 Padding(
                   padding:

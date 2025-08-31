@@ -24,7 +24,8 @@ class UserProfile extends ChangeNotifier {
       .where((element) =>
           element.status == "PENDING" ||
           element.status == "LACK OF REQUIREMENTS")
-      .toList();
+      .toList()
+    ..sort((x, y) => y.createdAt!.compareTo(x.createdAt!));
 
   Future<void> getUserprofile() async {
     final userProfile = await base
@@ -38,52 +39,76 @@ class UserProfile extends ChangeNotifier {
     updateNotifdata();
   }
 
-  listentoSheet() {
-    base.from("monitoring_sheet").stream(primaryKey: ["id"]).listen((event) {
-      for (var x in event) {
-        final sheet = MonitoringSheet.fromJson(x);
-        if (monitorSheet.isNotEmpty) {
-          for (MonitoringSheet monitor in monitorSheet) {
-            if (sheet.id == monitor.id) {
-              listFiltered[0] = sheet;
-              notifyListeners();
-              //   // update listener
-              //   monitor.current = sheet.current!;
-              //   monitor.approveTitle = sheet.approveTitle;
-              //   monitor.outlineDefense = sheet.outlineDefense;
-              //   monitor.outlineProposal = sheet.outlineProposal;
-              //   monitor.dataGathering = sheet.dataGathering;
-              //   monitor.manuscript = sheet.manuscript;
-              //   monitor.finalOralPrep = sheet.finalOralPrep;
-              //   monitor.routing = sheet.routing;
-              //   monitor.plagiarism = sheet.plagiarism;
-              //   monitor.approval = sheet.approval;
-              //   monitor.finalOutput = sheet.finalOutput;
-              //   monitor.subjectTeacher = sheet.subjectTeacher;
-              //   notifyListeners();
-              //   log(monitor.current ?? "", name: "Current Approve");
-            } else {
-              listFiltered.add(sheet);
-              notifyListeners();
-            }
-          }
-        } else {
-          // monitorSheet.add(sheet);
-
-          // for (MonitoringSheet monitor in monitorSheet) {
-          //   if (sheet.id == monitor.id) {
-          //     listFiltered.add(sheet);
-          //     notifyListeners();
-          //   }
-          // }
-        }
-      }
-    }).onError((e) {
-      log(e.toString());
-    });
+  void addtoList({MonitoringSheet? sheet}) async {
+    listFiltered.add(sheet!);
+    notifyListeners();
   }
 
-  enterCodeAdvisor() async {
+  Future<void> listentoSheet() async {
+    log("AM CALLED");
+
+    base
+        .from("monitoring_sheet")
+        .stream(primaryKey: ["id"]).listen((event) async {
+      for (var x in event) {
+        if (monitorSheet.isNotEmpty) {
+          final sheet = MonitoringSheet.fromJson(x);
+          final index = monitorSheet.indexWhere((x) => x.id == sheet.id);
+          if (index != -1) {
+            monitorSheet[index] = sheet;
+            notifyListeners();
+            if (sheet.idStudent == null ||
+                sheet.idStudent?.studentsId == null) {
+              proponents.removeWhere((x) => x.zcode == sheet.zCode);
+              notifyListeners();
+            } else {
+              final List<UsersModel> list1 = <UsersModel>[];
+
+              final getListids = sheet.idStudent?.studentsId!;
+              try {
+                proponents.removeWhere((x) => x.zcode == sheet.zCode);
+                // notifyListeners();
+              } finally {
+                for (var ids in getListids ?? []) {
+                  final userProfile = await base
+                      .from("users")
+                      .select()
+                      .eq("supabase_id", ids.idStudent ?? "")
+                      .single();
+                  final user1 = UsersModel.fromJson(userProfile);
+                  list1.add(user1);
+                  notifyListeners();
+                }
+                proponents.add(
+                  ForViewProponents(zcode: sheet.zCode, model: list1),
+                );
+                notifyListeners();
+              }
+            }
+          }
+        }
+      }
+      for (var x in monitorSheet) {
+        if (x.idAdivsor!.advisorId == base.auth.currentUser!.id) {
+          log("${x.thesisTitle} =>${x.idStudent?.studentsId!.toList().length} CHANGES FROM HERE");
+        }
+      }
+      // monitorSheet
+      //   ..clear()
+      //   ..addAll(event.map((e) => MonitoringSheet.fromJson(e)));
+      // notifyListeners();
+    });
+
+    // base.channel('custom-insert-channel').onPostgresChanges(
+    //     event: PostgresChangeEvent.all,
+    //     schema: "public",
+    //     table: "monitoring_sheet",
+    //     callback: (callback) {
+    //       log("$callback", name: "CHANGES");
+    //     });
+  }
+
+  Future<void> enterCodeAdvisor() async {
     await base
         .from("monitoring_sheet")
         .update(
@@ -98,7 +123,7 @@ class UserProfile extends ChangeNotifier {
         );
   }
 
-  getCurrentMonitorSheets() async {
+  Future<void> getCurrentMonitorSheets() async {
     try {
       final result = await base
           .from("monitoring_sheet")
@@ -111,8 +136,8 @@ class UserProfile extends ChangeNotifier {
       for (MonitoringSheet monitor in monitorSheet) {
         final List<UsersModel> list1 = <UsersModel>[];
         try {
-          final getListids = monitor.idStudent!.studentsId!;
-          for (var ids in getListids) {
+          final getListids = monitor.idStudent?.studentsId!;
+          for (var ids in getListids ?? []) {
             final userProfile = await base
                 .from("users")
                 .select()
@@ -129,6 +154,7 @@ class UserProfile extends ChangeNotifier {
         }
       }
     }
+    //listentoSheet();
   }
 
   List<UsersModel> returnModel(String? zcode) {
@@ -213,7 +239,7 @@ class UserProfile extends ChangeNotifier {
     }
   }
 
-  updateNotifdata() async {
+  Future<void> updateNotifdata() async {
     final List<dynamic> result = await base
         .from("notification_token_device")
         .select()
@@ -245,7 +271,7 @@ class UserProfile extends ChangeNotifier {
     }
   }
 
-  approveCurrentStatus(
+  Future<void> approveCurrentStatus(
       {String? id, Function()? onSuccess, Function()? onError}) async {
     final getCurrentModel = getmonitordetail(id!);
     final useCase = useCaseStatus(getCurrentModel);
@@ -401,7 +427,8 @@ class UserProfile extends ChangeNotifier {
     }
   }
 
-  leaveaComment({String? id, Function()? onSucess, Function()? onError}) async {
+  Future<void> leaveaComment(
+      {String? id, Function()? onSucess, Function()? onError}) async {
     isLoading1 = true;
     notifyListeners();
     if (leaveComment.text != "" || leaveComment.text.isNotEmpty) {
@@ -423,7 +450,7 @@ class UserProfile extends ChangeNotifier {
     }
   }
 
-  sendNotificationonStudents(
+  Future<void> sendNotificationonStudents(
       {String? monitorId, String? message, String? title}) async {
     final model = getmonitordetail(monitorId!);
     for (var sheetModel in model.idStudent!.studentsId!) {
@@ -453,9 +480,14 @@ class UserProfile extends ChangeNotifier {
         log(e.message.toLowerCase().toString());
       }
     }
+    // NotificationSend.sendMessageTo(
+    //   fcmToken: "",
+    //   title: title ?? "",
+    //   body: message ?? "",
+    // );
   }
 
-  createNotificationtabledata(
+  Future<void> createNotificationtabledata(
       {String? message,
       String? studentId,
       String? advisorId,
@@ -472,7 +504,7 @@ class UserProfile extends ChangeNotifier {
 
   List<Notifications> notifications = <Notifications>[];
 
-  getNotificationAndShow() async {
+  Future<void> getNotificationAndShow() async {
     base.from("notifications").stream(
       primaryKey: ['id'],
     ).listen((event) async {
@@ -491,7 +523,7 @@ class UserProfile extends ChangeNotifier {
     });
   }
 
-  markAsRead({bool? all, String? id}) async {
+  Future<void> markAsRead({bool? all, String? id}) async {
     if (all == true) {
       await base
           .from('notifications')
@@ -510,5 +542,64 @@ class UserProfile extends ChangeNotifier {
       updateModel.status = "read";
       notifyListeners();
     }
+  }
+
+  Future<void> deleteSheet({String? id, Function()? onSuccess}) async {
+    await base.from("notifications").delete().eq("monitor_id", "$id").select();
+    await base
+        .from("advisor_comments")
+        .delete()
+        .eq("monitor_id", "$id")
+        .select();
+    await base.from("monitoring_sheet").delete().eq("id", "$id").select();
+    monitorSheet.removeWhere((x) => "${x.id}" == id);
+    notifyListeners();
+    onSuccess?.call();
+  }
+
+  Future<void> removeStudent(
+      {MonitoringSheet? sheet,
+      String? studentId,
+      Function()? onSuccess}) async {
+    await base.from("monitoring_sheet").update({
+      "id_student": {
+        "students_id": sheet!.idStudent!.studentsId!
+            .where((x) => x.idStudent != studentId)
+            .map((x) => x.toJson())
+            .toList()
+      },
+    }).eq("id", sheet.id!);
+    sendNotifToStudent(
+      sheet: sheet,
+      studentId: studentId,
+    );
+    onSuccess?.call();
+  }
+
+  Future<void> sendNotifToStudent({
+    MonitoringSheet? sheet,
+    String? studentId,
+  }) async {
+    final studentToken = await base
+        .from("notification_token_device")
+        .select()
+        .eq("supabase_id", studentId!)
+        .single();
+
+    // Send Notif
+    NotificationSend.sendMessageTo(
+      fcmToken: studentToken["token_device"] ?? "",
+      title: "Removed",
+      body:
+          "You have been removed by the adviser for being inactive, Please contact your own advisor for reason for the thesis title ${sheet!.thesisTitle}",
+    );
+
+    createNotificationtabledata(
+      message:
+          "You have been removed by the adviser for being inactive, Please contact your own advisor for reason for the thesis title ${sheet.thesisTitle}",
+      studentId: "${studentToken["user_id"]}",
+      advisorId: "${user.id}",
+      monitorId: sheet.id!.toString(),
+    );
   }
 }

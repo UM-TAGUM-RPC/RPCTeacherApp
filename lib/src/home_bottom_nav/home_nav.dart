@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rpcadvisorapp/global/global.dart';
 import 'package:rpcadvisorapp/routes/route_generator.dart';
+import 'package:rpcadvisorapp/src/home/create_sheet/add_sheet.dart';
 import 'package:rpcadvisorapp/src/home/home.dart';
 import 'package:rpcadvisorapp/src/notifcation/notification.dart';
 import 'package:rpcadvisorapp/src/profile/profile.dart';
@@ -30,21 +33,28 @@ class _HomeNavState extends ConsumerState<HomeNav> {
   ];
   @override
   void initState() {
+    askPermission();
+
     ref.read(currentUser.notifier).getUserprofile();
     ref.read(currentUser.notifier).getCurrentMonitorSheets();
-    ref.read(currentUser.notifier).listentoSheet();
+
     ref.read(currentUser.notifier).getNotificationAndShow();
     super.initState();
   }
 
-  
+  void askPermission() async {
+    if (!(await Permission.notification.isGranted)) {
+      await Permission.notification.request();
+    }
+    await FirebasePushNotif().firebaseMessageListen();
+  }
 
   @override
   Widget build(BuildContext context) {
     final index = ref.watch(navSelection);
     final profile = ref.watch(currentUser);
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      onPopInvokedWithResult: (c, b) async => false,
       child: Scaffold(
         backgroundColor: CustomColor.white,
         appBar: PreferredSize(
@@ -91,16 +101,24 @@ class _HomeNavState extends ConsumerState<HomeNav> {
                       //     width: 25.w,
                       //   ),
                       // ),
-                      // 25.horizontalSpace,
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     DialogCustom.diualogEnterCode(context);
-                      //   },
-                      //   child: SvgPicture.asset(
-                      //     Asset.add,
-                      //     width: 25.w,
-                      //   ),
-                      // ),
+                      25.horizontalSpace,
+                      GestureDetector(
+                        onTap: () {
+                          //context.pushNamed(addSheet);
+                          //  DialogCustom.diualogEnterCode(context);
+                          showModalBottomSheet(
+                            isDismissible: true,
+                            isScrollControlled: true,
+                            barrierLabel: "",
+                            context: context,
+                            builder: (builder) => AddSheetForteacher(),
+                          );
+                        },
+                        child: SvgPicture.asset(
+                          Asset.add,
+                          width: 25.w,
+                        ),
+                      ),
                     ],
                   ),
                   10.verticalSpace,
@@ -147,7 +165,7 @@ class _HomeNavState extends ConsumerState<HomeNav> {
     );
   }
 
-  onTapUser(int? count) {
+  void onTapUser(int? count) {
     ref.read(navSelection.notifier).state = count!;
     switch (count) {
       case 0:

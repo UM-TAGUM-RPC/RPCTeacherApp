@@ -1,7 +1,7 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rpcadvisorapp/src/home/create_sheet/add_sheet.dart';
 import 'package:rpcadvisorapp/src/monitor_detail/pdf/pdf_view.dart';
 
 import '../global/global.dart';
@@ -15,7 +15,8 @@ const String signIn = "/",
     monitorDetail = "monitor_detail",
     advisorComment = "advisor_comment",
     signaturePage = "signature",
-    viewPdf = "viewF";
+    viewPdf = "viewF",
+    addSheet = "/add-sheet";
 
 final parentKey = GlobalKey<NavigatorState>(debugLabel: "root");
 final shellKey = GlobalKey<NavigatorState>(debugLabel: "shell");
@@ -31,18 +32,17 @@ final goRouter = Provider<GoRouter>((ref) {
       final auth = ref.read(authidentifier);
       final status = auth.statusAuth == AuthStatus.authenticated;
       final signInP = state.matchedLocation == "/";
-      final signUnP = state.matchedLocation == "/$signIn";
-      final homeP = state.matchedLocation == "/$home";
+      //final signUnP = state.matchedLocation == "/signup";
+      final homeP = state.matchedLocation == "/home";
 
-      if (!status && signInP && !signUnP && homeP) {
+      if (!status && signInP) {
         return "/";
       }
-      if (!copy.state && status && (!homeP || homeP)) {
-        log("Come Here");
-        copy.state = true;
-        return home;
-      }
 
+      if (!copy.state && status && (!homeP || homeP)) {
+        copy.state = true;
+        return "/home";
+      }
       return null;
     },
     routes: [
@@ -90,6 +90,16 @@ final goRouter = Provider<GoRouter>((ref) {
               Container(),
             ),
           );
+        },
+      ),
+      GoRoute(
+        name: addSheet,
+        path: addSheet,
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+              child: AddSheetForteacher(
+            key: state.pageKey,
+          ));
         },
       ),
       // GoRoute(

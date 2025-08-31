@@ -30,7 +30,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     super.initState();
   }
 
-  allowStorage() async {
+  Future<void> allowStorage() async {
     await [
       Permission.storage,
       Permission.manageExternalStorage,
@@ -146,7 +146,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                       email: email.text,
                                       password: password.text,
                                       success: () {
-                                         context.goNamed(home);
+                                        // context.goNamed(home);
                                       },
                                     );
                               }

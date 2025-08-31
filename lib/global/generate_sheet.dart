@@ -66,12 +66,10 @@
 //     return file;
 //   }
 
- 
-
 //   /*
-//    * 
-//    * Header UM 
-//    * 
+//    *
+//    * Header UM
+//    *
 //    */
 //   static Widget buildStaticheader({ImageProvider? image}) => Row(
 //         children: [
@@ -201,15 +199,15 @@
 //       );
 
 //   /*
-//    * 
-//    * Body UM 
-//    * 
+//    *
+//    * Body UM
+//    *
 //    */
 
 //   /*
-//    * 
-//    * Table Body Header 
-//    * 
+//    *
+//    * Table Body Header
+//    *
 //    */
 
 //   static TableRow headertableBody() {
@@ -259,9 +257,9 @@
 //   }
 
 //   /*
-//    * 
+//    *
 //    * Body Um data
-//    * 
+//    *
 //    */
 
 //   static List<TableRow> bodydataOfUser({
@@ -385,9 +383,9 @@
 //   }
 
 //   /*
-//    * 
+//    *
 //    * Footer UM
-//    * 
+//    *
 //    */
 
 //   static Widget buildFooter({String? name}) {
@@ -467,9 +465,9 @@
 //   }
 
 //   /*
-//    * 
+//    *
 //    * General Sans
-//    * 
+//    *
 //    */
 
 //   static generalSans({
@@ -521,7 +519,6 @@
 //     return file;
 //   }
 
-
 // // class GenerateSheet {
 // //   static Future<File> saveDocumentPdf({
 // //     String? name,
@@ -569,9 +566,9 @@
 //   }
 
 //   /*
-//    * 
-//    * Header UM 
-//    * 
+//    *
+//    * Header UM
+//    *
 //    */
 //   static Widget buildStaticheader({ImageProvider? image}) => Row(
 //         children: [
@@ -701,15 +698,15 @@
 //       );
 
 //   /*
-//    * 
-//    * Body UM 
-//    * 
+//    *
+//    * Body UM
+//    *
 //    */
 
 //   /*
-//    * 
-//    * Table Body Header 
-//    * 
+//    *
+//    * Table Body Header
+//    *
 //    */
 
 //   static TableRow headertableBody() {
@@ -759,9 +756,9 @@
 //   }
 
 //   /*
-//    * 
+//    *
 //    * Body Um data
-//    * 
+//    *
 //    */
 
 //   static List<TableRow> bodydataOfUser({
@@ -885,9 +882,9 @@
 //   }
 
 //   /*
-//    * 
+//    *
 //    * Footer UM
-//    * 
+//    *
 //    */
 
 //   static Widget buildFooter({String? name}) {
@@ -967,9 +964,9 @@
 //   }
 
 //   /*
-//    * 
+//    *
 //    * General Sans
-//    * 
+//    *
 //    */
 
 //   static generalSans({
@@ -994,7 +991,6 @@
 
 import 'dart:io';
 
-import 'package:cr_file_saver/file_saver.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -1006,9 +1002,7 @@ import 'package:printing/printing.dart';
 import '../models/models.dart';
 
 class GenerateSheet {
-  
-
-    static Future<File> saveDocumentPdf({
+  static Future<File> saveDocumentPdf({
     String? name,
     pw.Document? document,
   }) async {
@@ -1019,7 +1013,7 @@ class GenerateSheet {
     // final rag = await file.open(mode: FileMode.writeOnlyAppend);
     // rag.writeStringSync("string\n");
     // await rag.close();
-   // await CRFileSaver.saveFile(file.toString(), destinationFileName: name);
+    // await CRFileSaver.saveFile(file.toString(), destinationFileName: name);
 
     return file;
   }
@@ -1286,30 +1280,28 @@ class GenerateSheet {
                 ),
               ),
             ),
-            ...model!
-                .map(
-                  (e) => Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 2,
-                        horizontal: 2,
-                      ),
-                      child: SizedBox(
-                        height: 11,
-                        width: null,
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: generalSans(
-                            label: DateFormat("yyyy-MM-dd").format(e),
-                            align: TextAlign.center,
-                            fontSize: 7.spMax,
-                          ),
-                        ),
+            ...model!.map(
+              (e) => Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 2,
+                    horizontal: 2,
+                  ),
+                  child: SizedBox(
+                    height: 11,
+                    width: null,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: generalSans(
+                        label: DateFormat("yyyy-MM-dd").format(e),
+                        align: TextAlign.center,
+                        fontSize: 7.spMax,
                       ),
                     ),
                   ),
-                )
-                .toList()
+                ),
+              ),
+            )
           ]),
         );
       }
@@ -1461,7 +1453,7 @@ class GenerateSheet {
    * 
    */
 
-  static generalSans({
+  static pw.Text generalSans({
     String? label,
     TextAlign? align,
     bool? bold,

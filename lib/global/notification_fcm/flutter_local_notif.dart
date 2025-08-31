@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -56,42 +55,41 @@ class FirebasePushNotif {
     getToken();
   }
 
+  static Future<void> showNotif({RemoteMessage? message}) async {
+    RemoteNotification? notification = message!.notification;
+    //  AndroidNotification? android = message.notification?.android;
+    log("Device IOS/Android ${message.contentAvailable}");
+    flutterLocalNotificationsPlugin.show(
+      notification.hashCode,
+      message.data["title"] ?? notification!.title,
+      message.data["body"] ?? notification!.body,
+      NotificationDetails(
+        iOS: const DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          channelDescription: channel.description,
+          channelShowBadge: true,
+          icon: "mipmap/logo_notif",
+          priority: Priority.high,
+          importance: Importance.high,
+          enableVibration: true,
+          playSound: true,
+          //styleInformation:
+        ),
+      ),
+    );
+    log(channel.id);
+    log(channel.name);
+  }
+
   Future<void> firebaseMessageListen() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
-      RemoteNotification? notification = message!.notification;
-      AndroidNotification? android = message.notification?.android;
-      log("Device IOS/Android ${message.contentAvailable}");
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            iOS: const DarwinNotificationDetails(
-              presentAlert: true,
-              presentBadge: true,
-              presentSound: true,
-            ),
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channelDescription: channel.description,
-              channelShowBadge: true,
-              icon: "mipmap/logo_square",
-              priority: Priority.high,
-              importance: Importance.high,
-              color: CustomColor.kindaRed,
-              enableVibration: true,
-              playSound: true,
-              //styleInformation:
-            ),
-          ),
-        );
-        log(channel.id);
-        log(channel.name);
-      } else {
-        ///
-      }
+      showNotif(message: message);
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -102,14 +100,7 @@ class FirebasePushNotif {
   Future<void> getToken() async {
     FirebaseMessaging.instance.requestPermission();
     final result = await FirebaseMessaging.instance.getToken();
-    if (SharedPrefs.read(tokenDevice) != "" &&
-        SharedPrefs.read(tokenDevice) == result) {
-      log("Token Firebase already been saved");
-    } else {
-      if (Platform.isAndroid) {
-        SharedPrefs.write(tokenDevice, result);
-        log("Token Device user save $result", name: "Device Token");
-      }
-    }
+    SharedPrefs.write(tokenDevice, result);
+    log("Token Device user save $result", name: "Device Token");
   }
 }

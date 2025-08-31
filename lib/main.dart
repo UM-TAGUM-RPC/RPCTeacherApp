@@ -22,15 +22,16 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
   playSound: true,
   enableVibration: true,
 );
-Future<void> messagehandling(RemoteMessage? message) async {
-  await Firebase.initializeApp();
-  RemoteNotification? notification = message!.notification;
-  AndroidNotification? android = message.notification?.android;
-  if (notification != null && android != null) {
-    ///
-  } else {
-    ///
-  }
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ).then((x) async {
+    await FirebasePushNotif().onInit();
+  });
+
+  await FirebasePushNotif.showNotif(message: message);
 }
 
 void main() async {
@@ -43,7 +44,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   ).then((x) async => await FirebasePushNotif().onInit());
   await SharedPrefs.init();
-  FirebaseMessaging.onBackgroundMessage(messagehandling);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,

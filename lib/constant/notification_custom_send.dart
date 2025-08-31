@@ -30,9 +30,9 @@ class NotificationSend {
         name: "NOTIF SEND");
     final data = {
       "message": {
-        "token":
-            "eU0PrQSDTrqH_xXNXMKoNN:APA91bFpfd6hTAvHpkbaJsFVkdZRhaVkHvmsvzFBdMYjzkVV-GLcEUDktUY6Dbu0eftjslArmMgFLbVao09yjEBzzu-5yTUg-pKrcVaooWCcO4JiAAiiXFw",
-        "notification": {"title": "$title", "body": body ?? ""},
+        "token": "$fcmToken",
+        "data": {"title": "$title", "body": body ?? ""}
+        //"notification": {"title": "$title", "body": body ?? ""},
       }
     };
     await client

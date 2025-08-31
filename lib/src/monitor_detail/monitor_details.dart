@@ -268,9 +268,9 @@ class _MonitorDetailState extends ConsumerState<MonitorDetail> {
                             ),
                             10.verticalSpace,
                             GeneralSans(
-                              label: item.current ?? "",
+                              label: user.casesStatus(item),
                               fontColor: CustomColor.kindaRed,
-                              fontSize: 14.sp,
+                              fontSize: 18.sp,
                               bold: true,
                               align: TextAlign.left,
                             ),

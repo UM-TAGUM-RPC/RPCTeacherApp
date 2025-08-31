@@ -116,7 +116,7 @@ class _AddSheetForteacherState extends ConsumerState<AddSheetForteacher> {
                                   });
                                   Navigator.of(context, rootNavigator: true)
                                       .pop();
-                                  profile.getCurrentMonitorSheets();
+                                  profile.addtoList(sheet: x);
                                 },
                               );
                             }

@@ -32,9 +32,8 @@ class _AddSheetForteacherState extends ConsumerState<AddSheetForteacher> {
       child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 20,
-            horizontal: 15,
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: Form(
             key: formS,
